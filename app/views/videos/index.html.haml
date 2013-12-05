@@ -1,10 +1,3 @@
 
-%article.video_category
-  %header
-    %h3 TV Dramas
-  .videos.row
-    - @videos.each do |video|
-      .video.col-sm-2
-        = link_to video do
-          %img{src: asset_path("covers/#{video.small_cover_url}"), width: 200, height: 300 }
-        .text-center= video.title
+- @categories.each do |category|
+  = render 'by_category', category: category unless category.videos.empty?
