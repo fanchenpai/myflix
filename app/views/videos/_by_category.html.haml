@@ -1,11 +1,5 @@
-
 %article.video_category
   %header
     = link_to genre_path(category) do
       %h3= category.name
-  .videos.row
-    - category.videos.each do |video|
-      .video.col-sm-2.text-center
-        = link_to video do
-          %img{src: image_src(video.small_cover_url), width: 200, height: 300 }
-        %div= video.title
+    = render 'videos', videos: category.videos
