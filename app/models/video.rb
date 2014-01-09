@@ -7,4 +7,8 @@ class Video < ActiveRecord::Base
     self.category.name unless self.category.nil?
   end
 
+  def self.search_by_title(search_term)
+    Video.where('title LIKE ?', "%#{search_term}%")
+  end
+
 end
