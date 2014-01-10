@@ -7,6 +7,11 @@ describe Video do
   it { should validate_presence_of(:category_id) }
   it { should respond_to(:category_name) }
 
+  it "fails validation with no title or no category" do
+    expect(Video.new).to have(1).errors_on(:title)
+    expect(Video.new).to have(1).errors_on(:category_id)
+  end
+
   describe '#self.search_by_title' do
     let (:comedy) { Category.create(name:'Comedy')  }
     let! (:video1) { Video.create(title:'Big Bang Theory Season 1', category: comedy, created_at: 1.day.ago) }
