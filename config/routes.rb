@@ -4,9 +4,9 @@ Myflix::Application.routes.draw do
   root to: redirect('/home')
 
   get '/home', to: 'users#home'
-  get '/register', to: 'users#register'
+  get '/register', to: 'users#new'
   post '/register', to: 'users#create'
-  get '/login', to: 'users#login'
+  get '/login', to: 'sessions#new'
   post '/login', to: 'sessions#create'
 
   resources :videos, only: [:show, :index] do

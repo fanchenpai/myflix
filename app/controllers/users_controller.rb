@@ -4,11 +4,7 @@ class UsersController < ApplicationController
 
   end
 
-  def register
-
-  end
-
-  def login
+  def new #registration form
 
   end
 
