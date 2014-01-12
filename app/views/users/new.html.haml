@@ -1,37 +1,28 @@
+
 %section.register.container
   .row
     .col-sm-10.col-sm-offset-1
-      %form.form-horizontal
+      = form_for @user, html: { class: 'form-horizontal' } do |f|
         %header
           %h1 Register
+        = render 'shared/form_error', object: @user
         %fieldset
           .form-group
-            %label.control-label.col-sm-2 Email Address
+            = f.label :full_name, class: 'control-label col-sm-3'
             .col-sm-6
-              %input.form-control(type="email")
+              = f.text_field :full_name, class: 'form-control'
           .form-group
-            %label.control-label.col-sm-2 Password
+            = f.label :email, class: 'control-label col-sm-3'
             .col-sm-6
-              %input.form-control(type="password")
+              = f.email_field :email, class: 'form-control'
           .form-group
-            %label.control-label.col-sm-2 Full Name
+            = f.label :password, class: 'control-label col-sm-3'
             .col-sm-6
-              %input.form-control(type="text")
-        %fieldset.credit_card
+              = f.password_field :password, class: 'form-control'
           .form-group
-            %label.control-label.col-sm-2 Credit Card Number
+            = f.label :password_confirmation, "Confirm Password", class: 'control-label col-sm-3'
             .col-sm-6
-              %input.form-control(type="text")
-          .form-group
-            %label.control-label.col-sm-2 Security Code
-            .col-sm-6
-              %input.form-control(type="text")
-          .form-group
-            %label.control-label.col-sm-2 Expiration
-            .col-sm-3
-              = select_month(Date.today, {add_month_numbers: true},  class: 'form-control')
-            .col-sm-2
-              = select_year(Date.today.year, {start_year: Date.today.year, end_year: Date.today.year + 4}, class: 'form-control')
-        %fieldset.actions.control-group.col-sm-offset-2
+              = f.password_field :password_confirmation, class: 'form-control'
+        %fieldset.actions.control-group.col-sm-offset-4
           .controls
-            %input(type="submit" value="Sign Up" class="btn btn-default")
+            = f.submit "Sign Up", class: "btn btn-default"

@@ -1,13 +1,13 @@
 Myflix::Application.routes.draw do
 
 
-  root to: redirect('/home')
+  root to: 'pages#front'
 
-  get '/home', to: 'users#home'
   get '/register', to: 'users#new'
-  post '/register', to: 'users#create'
-  get '/login', to: 'sessions#new'
-  post '/login', to: 'sessions#create'
+  post '/users', to: 'users#create'
+  get '/sign_in', to: 'sessions#new'
+  post '/sessions', to: 'sessions#create'
+  get '/sign_out', to: 'sessions#destroy'
 
   resources :videos, only: [:show, :index] do
     collection do
