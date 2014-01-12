@@ -1,3 +1,2 @@
-
 - @categories.each do |category|
   = render 'by_category', category: category, videos: category.recent_videos unless category.recent_videos.empty?
