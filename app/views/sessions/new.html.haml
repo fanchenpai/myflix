@@ -1,0 +1,15 @@
+%section.sign_in.container
+  .row
+    .col-sm-10.col-sm-offset-1
+      = bootstrap_form_for @user, url: sessions_path do |f|
+        %header
+          %h1 Sign in
+        .row
+          .col-sm-4
+            = f.email_field :email, label: "Email Address"
+        .row
+          .col-sm-4
+            = f.password_field :password
+        .row
+          .col-sm-4
+            = f.submit "Sign In", class: "btn btn-default"
