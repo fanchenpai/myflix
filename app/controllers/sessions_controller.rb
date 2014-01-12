@@ -1,5 +1,6 @@
 class SessionsController < ApplicationController
   def new #login form
+    redirect_to videos_path if logged_in?
     @user = User.new
   end
 
