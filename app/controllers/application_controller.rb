@@ -11,4 +11,11 @@ class ApplicationController < ActionController::Base
     !!current_user
   end
 
+  def require_user
+    unless logged_in?
+      flash[:error] = "You are trying to access a member-only feature. Please sign in first."
+      redirect_to sign_in_path
+    end
+  end
+
 end
