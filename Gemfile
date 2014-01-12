@@ -9,6 +9,7 @@ gem 'sass-rails'
 gem 'uglifier'
 gem 'jquery-rails'
 gem 'bcrypt-ruby', '~>3.1.2'
+gem 'bootstrap_form'
 
 group :development do
   gem 'sqlite3'
