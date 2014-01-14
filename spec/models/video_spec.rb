@@ -12,7 +12,7 @@ describe Video do
     expect(Video.new).to have(1).errors_on(:category_id)
   end
 
-  describe '#self.search_by_title' do
+  describe '.search_by_title' do
     let (:comedy) { Category.create(name:'Comedy')  }
     let! (:video1) { Video.create(title:'Big Bang Theory Season 1', category: comedy, created_at: 1.day.ago) }
     let! (:video2) { Video.create(title:'Big Bang Theory Season 2', category: comedy) }
