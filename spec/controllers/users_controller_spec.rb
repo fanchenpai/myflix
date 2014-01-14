@@ -1,29 +1,25 @@
 require 'spec_helper'
 
-# describe 'Routing' do
-#   # it { should route(:get, '/posts').to(controller: 'posts', action: 'index') }
-#   # it { should route(:get, '/posts/1').to('posts#show', id: 1) }
-# end
+describe 'Routing' do
+  it { should route(:get, '/register').to('users#new') }
+  it { should route(:post, '/users').to('users#create') }
+end
+
 describe UsersController do
   describe 'GET new' do
     before { get :new }
     it 'sets the users variable' do
       expect(assigns(:user)).to be_new_record
-    end
-
-    it 'renders the new template' do
-      expect(response).to render_template :new
+      expect(assigns(:user)).to be_instance_of(User)
     end
   end
 
   describe 'POST create' do
-    context 'when inputs are valid and saved to db' do
-      before do
-        post :create, { user: { full_name: 'test', email: 'test@test.com',
-                                password: 'test', password_confirmation: 'test'} }
-      end
 
+    context 'when inputs are valid and saved to db' do
+      before { post :create, { user: Fabricate.attributes_for(:user) } }
       it 'sets the user variable' do
+        expect(assigns(:user)).to be_instance_of(User)
         expect(assigns(:user)).to be_valid
       end
       it 'saves to the db' do
@@ -53,7 +49,6 @@ describe UsersController do
       end
       it 'renders the new template' do
         expect(response).to render_template :new
-        #[deprecated] I18n.enforce_available_locales will default to true in the future. If you really want to skip validation of your locale you can set I18n.enforce_available_locales = false to avoid this message.
       end
     end
   end
