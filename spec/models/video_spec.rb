@@ -6,11 +6,7 @@ describe Video do
   it { should validate_presence_of(:title) }
   it { should validate_presence_of(:category_id) }
   it { should respond_to(:category_name) }
-
-  it "fails validation with no title or no category" do
-    expect(Video.new).to have(1).errors_on(:title)
-    expect(Video.new).to have(1).errors_on(:category_id)
-  end
+  it { should have_many(:reviews) }
 
   describe '.search_by_title' do
     let (:comedy) { Category.create(name:'Comedy')  }
