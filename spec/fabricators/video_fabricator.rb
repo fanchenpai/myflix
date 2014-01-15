@@ -1,5 +1,5 @@
 Fabricator(:video) do
-  title Faker::Lorem::words.to_s
+  title Faker::Lorem::words.join(' ')
   description Faker::Lorem::paragraph
   category
 end

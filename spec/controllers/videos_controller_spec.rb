@@ -26,6 +26,15 @@ describe VideosController do
       it "sets the video variable" do
         expect(assigns(:video)).to eq video1
       end
+      it "has reviews associated with the the video" do
+        review1 = Fabricate(:review, video: video1)
+        review2 = Fabricate(:review, video: video1)
+        expect(assigns(:video).reviews).to match_array [review1, review2]
+      end
+      it "sets the review variable" do
+        expect(assigns(:review)).to be_new_record
+        expect(assigns(:review)).to be_instance_of(Review)
+      end
     end
 
     describe "POST search" do
