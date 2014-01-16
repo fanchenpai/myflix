@@ -6,13 +6,9 @@ describe Video do
   it { should validate_presence_of(:title) }
   it { should validate_presence_of(:category_id) }
   it { should respond_to(:category_name) }
+  it { should have_many(:reviews).order('created_at DESC') }
 
-  it "fails validation with no title or no category" do
-    expect(Video.new).to have(1).errors_on(:title)
-    expect(Video.new).to have(1).errors_on(:category_id)
-  end
-
-  describe '#self.search_by_title' do
+  describe '.search_by_title' do
     let (:comedy) { Category.create(name:'Comedy')  }
     let! (:video1) { Video.create(title:'Big Bang Theory Season 1', category: comedy, created_at: 1.day.ago) }
     let! (:video2) { Video.create(title:'Big Bang Theory Season 2', category: comedy) }
@@ -31,6 +27,21 @@ describe Video do
       expect(Video.search_by_title('')).to eq([])
       expect(Video.search_by_title(' ')).to eq([])
       expect(Video.search_by_title(nil)).to eq([])
+    end
+  end
+
+  describe '#category_name'
+
+  describe '#average_rating' do
+    it 'returns nil if there is no reviews' do
+      video1 = Fabricate(:video)
+      expect(video1.average_rating).to be_nil
+    end
+    it 'returns average rating of a video' do
+      video1 = Fabricate(:video)
+      review1 = Fabricate(:review, video: video1, rating: 4)
+      review2 = Fabricate(:review, video: video1, rating: 5)
+      expect(video1.average_rating).to eq '4.5'
     end
   end
 end

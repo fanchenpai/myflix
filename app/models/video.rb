@@ -1,10 +1,15 @@
 class Video < ActiveRecord::Base
   belongs_to :category
+  has_many :reviews, -> { order('created_at DESC') }
   validates :title, presence: true
   validates :category_id, presence: true
 
   def category_name
     self.category.name unless self.category.nil?
+  end
+
+  def average_rating
+    self.reviews.average(:rating).round(1).to_s unless self.reviews.empty?
   end
 
   def self.search_by_title(search_term)

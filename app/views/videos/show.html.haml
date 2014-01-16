@@ -6,4 +6,17 @@
       .video_info.col-sm-3
         %header
           %h3= @video.title
+          - unless @video.reviews.empty?
+            %span Rating: #{@video.average_rating}/5.0
         %p= @video.description
+
+%section.reviews.container
+  .row
+    .col-sm-10.col-sm-offset-1
+      = render 'reviews/form'
+      %header
+        %h3 User Reviews (#{@video.reviews.count})
+      %ul
+        - @video.reviews.each do |review|
+          %li.row
+            = render 'reviews/review', review: review
