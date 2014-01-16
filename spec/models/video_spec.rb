@@ -29,4 +29,19 @@ describe Video do
       expect(Video.search_by_title(nil)).to eq([])
     end
   end
+
+  describe '#category_name'
+
+  describe '#average_rating' do
+    it 'returns nil if there is no reviews' do
+      video1 = Fabricate(:video)
+      expect(video1.average_rating).to be_nil
+    end
+    it 'returns average rating of a video' do
+      video1 = Fabricate(:video)
+      review1 = Fabricate(:review, video: video1, rating: 4)
+      review2 = Fabricate(:review, video: video1, rating: 5)
+      expect(video1.average_rating).to eq '4.5'
+    end
+  end
 end
