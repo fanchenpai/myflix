@@ -32,7 +32,7 @@ Video.create(category: drama, title:'The Goodwife',small_cover_url:'the_goodwife
              description: Faker::Lorem::paragraph(10))
 
 [family, action, romance].each do |c|
-  7.times { Video.create(category: c, title: Faker::Lorem::words(5).join(' '),description: Faker::Lorem::paragraph(10)) }
+  7.times { Fabricate(:video, category: c) }
 end
 
 
@@ -42,13 +42,11 @@ user3 = Fabricate(:user)
 user4 = Fabricate(:user)
 
 Video.first(7).each do |v|
-  Review.create(user: user2, video: v,rating: rand(1..5), title: Faker::Lorem::words(5).join(' '), detail: Faker::Lorem::paragraph(5))
-  Review.create(user: user3, video: v,rating: rand(1..5), title: Faker::Lorem::words(5).join(' '), detail: Faker::Lorem::paragraph(5))
+  Fabricate(:review, user: user2, video: v)
+  Fabricate(:review, user: user3, video: v)
 end
 
 Category.all.each do |c|
-  Review.create(user: user1, video: c.videos.first,rating: rand(1..5),
-             title: Faker::Lorem::words(5).join(' '), detail: Faker::Lorem::paragraph(5)) unless c.videos.nil?
-  Review.create(user: user4, video: c.videos.last,rating: rand(1..5),
-             title: Faker::Lorem::words(5).join(' '), detail: Faker::Lorem::paragraph(5)) unless c.videos.nil?
+  Fabricate(:review, user: user1, video: c.videos.first) unless c.videos.nil?
+  Fabricate(:review, user: user4, video: c.videos.last) unless c.videos.nil?
 end
