@@ -1,0 +1,3 @@
+class QueueItemsController < ApplicationController
+
+end
