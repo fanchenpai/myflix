@@ -30,6 +30,14 @@ describe Video do
     end
   end
 
+  describe '#category_name' do
+    it 'returns the name of associated category' do
+      category1 = Fabricate(:category, name: 'Drama')
+      video1 = Fabricate(:video, category: category1)
+      expect(video1.category_name).to eq 'Drama'
+    end
+  end
+
   describe '#average_rating' do
     it 'returns nil if there is no reviews' do
       video1 = Fabricate(:video)
