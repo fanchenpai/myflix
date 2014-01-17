@@ -4,7 +4,7 @@
   - if logged_in?
     %ul.col-md-4.clearfix
       %li= link_to "Videos", videos_path
-      %li= link_to "My Queue"
+      %li= link_to "My Queue", my_queue_path
       %li= link_to "People"
     = render 'shared/search_video_form'
     #user_links.pull-right

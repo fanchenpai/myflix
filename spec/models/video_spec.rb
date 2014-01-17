@@ -30,8 +30,6 @@ describe Video do
     end
   end
 
-  describe '#category_name'
-
   describe '#average_rating' do
     it 'returns nil if there is no reviews' do
       video1 = Fabricate(:video)
