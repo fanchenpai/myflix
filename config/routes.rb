@@ -17,7 +17,7 @@ Myflix::Application.routes.draw do
     resources :reviews, only: [:create]
   end
 
-  resources :queue_items, only: [:create]
+  resources :queue_items, only: [:create, :destroy]
 
   get '/genre/:id', to: 'videos#index_by_category', as: 'genre'
 

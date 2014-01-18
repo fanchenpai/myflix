@@ -28,7 +28,7 @@
                 %td
                   = link_to queue_item.category_name, genre_path(queue_item.category)
                 %td
-                  = link_to "", method: :post do
-                    %i.icon-remove
+                  = link_to queue_item_path(queue_item), method: :delete do
+                    %i.glyphicon.glyphicon-remove
 
         = button_to "Update Instant Queue", nil, class: "btn btn-default"

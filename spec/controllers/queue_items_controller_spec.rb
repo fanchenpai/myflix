@@ -51,6 +51,25 @@ describe QueueItemsController do
         expect(flash[:notice]).not_to be_blank
       end
     end
+
+    describe 'GET destroy' do
+      it 'removes the queue item from the queue' do
+        queue_item1 = Fabricate(:queue_item, user: current_user)
+        delete :destroy, id: queue_item1.id
+        expect(QueueItem.count).to eq 0
+      end
+      it 'redirects back to my queue page' do
+        queue_item1 = Fabricate(:queue_item)
+        delete :destroy, id: queue_item1.id
+        expect(response).to redirect_to :my_queue
+      end
+      it 'does not remove queue item that belongs to other user' do
+        user2 = Fabricate(:user)
+        queue_item2 = Fabricate(:queue_item, user: user2)
+        delete :destroy, id: queue_item2.id
+        expect(QueueItem.count).to eq 1
+      end
+    end
   end
 
   context 'without user logged in' do
@@ -66,6 +85,13 @@ describe QueueItemsController do
     describe 'POST create' do
       it 'redirects to sign in' do
         post :create
+        expect(response).to redirect_to :sign_in
+      end
+    end
+
+    describe 'DELETE destroy' do
+      it 'redirects to sign in' do
+        delete :destroy, id: 1
         expect(response).to redirect_to :sign_in
       end
     end
