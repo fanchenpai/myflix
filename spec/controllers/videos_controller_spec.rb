@@ -1,9 +1,5 @@
 require 'spec_helper'
 
-describe 'Routing' do
-  it { should route(:get, '/genre/1').to('videos#index_by_category', id: '1') }
-end
-
 describe VideosController do
   context "with user logged in successfully" do
     before { session[:user_id] = Fabricate(:user).id }
@@ -57,21 +53,21 @@ describe VideosController do
 
   context "without user logged in" do
     describe "GET index" do
-      it "redirect to sign in" do
+      it "redirects to sign in" do
         get :index
         expect(response).to redirect_to :sign_in
       end
     end
     describe "GET show" do
-      it "redirect to sign in" do
-        get :index
+      it "redirects to sign in" do
+        get :show, id: 1
         expect(response).to redirect_to :sign_in
       end
     end
 
     describe "POST search" do
-      it "redirect to sign in" do
-        get :index
+      it "redirects to sign in" do
+        post :search, search_term: 'test'
         expect(response).to redirect_to :sign_in
       end
     end

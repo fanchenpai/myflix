@@ -8,6 +8,7 @@ Myflix::Application.routes.draw do
   get '/sign_in', to: 'sessions#new'
   post '/sessions', to: 'sessions#create'
   get '/sign_out', to: 'sessions#destroy'
+  get '/my_queue', to: 'queue_items#index'
 
   resources :videos, only: [:show, :index] do
     collection do
@@ -16,7 +17,7 @@ Myflix::Application.routes.draw do
     resources :reviews, only: [:create]
   end
 
-
+  resources :queue_items, only: [:create, :destroy]
 
   get '/genre/:id', to: 'videos#index_by_category', as: 'genre'
 
