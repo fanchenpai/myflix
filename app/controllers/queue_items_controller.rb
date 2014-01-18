@@ -7,31 +7,28 @@ class QueueItemsController < ApplicationController
 
   def create
     video = Video.find(params[:video_id])
-    if queue_item_exists?(video, current_user)
-      flash[:error] = "This video is already in [My Queue]."
-      redirect_to my_queue_path
-      return
-    end
-    queue_item = QueueItem.new(video: video, user:current_user, position: new_queue_item_position)
-    if queue_item.save
-      flash[:notice] = "Video added to [My Queue]."
-      redirect_to my_queue_path
-    else
-      flash[:error] = "Action failed."
-      redirect_to video_path(video)
-    end
+    queue_video(video)
+    redirect_to my_queue_path
   end
 
   private
+
+  def queue_video(video)
+    if current_user_queued_video?(video)
+      flash[:error] = "This video is already in [My Queue]."
+    else
+      QueueItem.create(video: video, user:current_user, position: new_queue_item_position)
+      flash[:notice] = "Video added to [My Queue]."
+    end
+  end
 
   def new_queue_item_position
     current_max = current_user.queue_items.maximum(:position)
     current_max.nil? ? 1 : current_max + 1
   end
 
-  def queue_item_exists?(video, user)
-    not_found = QueueItem.where('user_id=? AND video_id=?', user.id, video.id).empty?
-    !not_found
+  def current_user_queued_video?(video)
+    current_user.queue_items.map(&:video).include?(video)
   end
 
 end

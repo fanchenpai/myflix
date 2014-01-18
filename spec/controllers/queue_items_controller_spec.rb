@@ -19,7 +19,7 @@ describe QueueItemsController do
       let (:video1) { Fabricate(:video) }
       it 'creates a queue item' do
         post :create, video_id: video1.id
-        expect(QueueItem.all.count).to eq 1
+        expect(QueueItem.count).to eq 1
       end
       it 'creates queue item that associates to the video' do
         post :create, video_id: video1.id
@@ -32,18 +32,23 @@ describe QueueItemsController do
       it 'does not add the same video to the queue twice' do
         Fabricate(:queue_item, video: video1, user: current_user)
         post :create, video_id: video1.id
-        expect(QueueItem.all.count).to eq 1
+        expect(current_user.queue_items.count).to eq 1
+        expect(flash[:error]).not_to be_blank
       end
       it 'puts the newly created queue item at the last position' do
         video2 = Fabricate(:video)
         Fabricate(:queue_item, video: video2, user: current_user, position: 1)
         post :create, video_id: video1.id
         expect(QueueItem.last.position).to be > QueueItem.first.position
-        expect(QueueItem.all.maximum(:position)).to eq QueueItem.last.position
+        expect(current_user.queue_items.maximum(:position)).to eq QueueItem.last.position
       end
       it 'redirects to my queue page' do
         post :create, video_id: video1.id
         expect(response).to redirect_to :my_queue
+      end
+      it 'sets a flash message' do
+        post :create, video_id: video1.id
+        expect(flash[:notice]).not_to be_blank
       end
     end
   end
