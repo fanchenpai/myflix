@@ -10,4 +10,6 @@ class QueueItem < ActiveRecord::Base
     review = Review.where(user: user, video: video).first
     review.rating unless review.nil?
   end
+
+
 end
