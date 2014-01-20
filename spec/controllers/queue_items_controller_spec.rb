@@ -52,14 +52,60 @@ describe QueueItemsController do
       end
     end
 
-    describe 'POST bulk_update' do
+    describe 'POST update_queue' do
       # "queue_items"=>[{"id"=>"1", "position"=>"5"}, {"id"=>"3", "position"=>"3"}, {"id"=>"4", "position"=>"4"}]
-      it 'updates position for each queue items' do
-        item1 = Fabricate(:queue_item, user: current_user, position: 1)
-        item2 = Fabricate(:queue_item, user: current_user, position: 2)
-        post :bulk_update, "queue_items"=>[{"id"=>"#{item1.id}", "position"=>"#{item2.position}"}, {"id"=>"#{item2.id}", "position"=>"#{item1.position}"}]
-        expect(item1.reload.position).to eq 2
-        expect(item2.reload.position).to eq 1
+      context 'with valid inputs' do
+        let (:item1) { Fabricate(:queue_item, user: current_user, position: 1) }
+        let (:item2) { Fabricate(:queue_item, user: current_user, position: 2) }
+        it 'updates positions for queue items' do
+          post :update_queue, "queue_items"=>[{"id"=>"#{item1.id}", "position"=>"#{item2.position}"}, {"id"=>"#{item2.id}", "position"=>"#{item1.position}"}]
+          expect(current_user.queue_items.map(&:position)).to eq [1,2]
+          expect(current_user.queue_items.map(&:id)).to eq [2,1]
+        end
+        it 'normalize the position number' do
+          post :update_queue, "queue_items"=>[{"id"=>"#{item1.id}", "position"=>"5"}, {"id"=>"#{item2.id}", "position"=>"3"}]
+          expect(current_user.queue_items.map(&:position)).to eq [1,2]
+          expect(current_user.queue_items.map(&:id)).to eq [2,1]
+        end
+        it 'redirects to my queue page' do
+          post :update_queue, "queue_items"=>[{"id"=>"#{item1.id}", "position"=>"#{item2.position}"}, {"id"=>"#{item2.id}", "position"=>"#{item1.position}"}]
+          expect(response).to redirect_to :my_queue
+        end
+      end
+      context 'with invalid format inputs' do
+        let (:item1) { Fabricate(:queue_item, user: current_user, position: 1) }
+        let (:item2) { Fabricate(:queue_item, user: current_user, position: 2) }
+        before do
+          post :update_queue, "queue_items"=>[{"id"=>"#{item1.id}", "position"=>"5.5"}, {"id"=>"#{item2.id}", "position"=>"a"}]
+        end
+        it 'does not update the queue items' do
+          expect(item1.reload.position).to eq 1
+          expect(item2.reload.position).to eq 2
+        end
+        it 'sets the flash message' do
+          expect(flash[:error]).not_to be_blank
+        end
+        it 'redirects to my queue page' do
+          expect(response).to redirect_to :my_queue
+        end
+      end
+      context 'with queue items that do not belong to current logged in user' do
+        let (:user2) { Fabricate(:user) }
+        let (:item1) { Fabricate(:queue_item, user: user2, position: 1) }
+        let (:item2) { Fabricate(:queue_item, user: current_user, position: 1) }
+        before do
+          post :update_queue, "queue_items"=>[{"id"=>"#{item1.id}", "position"=>"5"}, {"id"=>"#{item2.id}", "position"=>"2"}]
+        end
+        it 'does not update the queue items' do
+          expect(item1.reload.position).to eq 1
+          expect(item2.reload.position).to eq 1
+        end
+        it 'sets the flash message' do
+          expect(flash[:error]).not_to be_blank
+        end
+        it 'redirects to my queue page' do
+          expect(response).to redirect_to :my_queue
+        end
       end
     end
 
@@ -68,6 +114,12 @@ describe QueueItemsController do
         queue_item1 = Fabricate(:queue_item, user: current_user)
         delete :destroy, id: queue_item1.id
         expect(QueueItem.count).to eq 0
+      end
+      it 'normalize the position number' do
+        queue_item1 = Fabricate(:queue_item, user: current_user, position: 1)
+        queue_item2 = Fabricate(:queue_item, user: current_user, position: 2)
+        delete :destroy, id: queue_item1.id
+        expect(queue_item2.reload.position).to eq 1
       end
       it 'redirects back to my queue page' do
         queue_item1 = Fabricate(:queue_item)
@@ -96,6 +148,13 @@ describe QueueItemsController do
     describe 'POST create' do
       it 'redirects to sign in' do
         post :create
+        expect(response).to redirect_to :sign_in
+      end
+    end
+
+    describe 'POST update_queue' do
+      it 'redirects to sign in' do
+        post :update_queue
         expect(response).to redirect_to :sign_in
       end
     end
