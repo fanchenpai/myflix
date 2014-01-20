@@ -11,6 +11,14 @@ class QueueItemsController < ApplicationController
     redirect_to my_queue_path
   end
 
+  def bulk_update
+    result = true
+    params[:queue_items].each do |item|
+      result && QueueItem.update_position(item['id'],item['position'])
+    end
+    redirect_to my_queue_path
+  end
+
   def destroy
     queue_item = QueueItem.find(params[:id])
     queue_item.destroy if current_user.queue_items.include?(queue_item)

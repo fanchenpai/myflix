@@ -52,6 +52,17 @@ describe QueueItemsController do
       end
     end
 
+    describe 'POST bulk_update' do
+      # "queue_items"=>[{"id"=>"1", "position"=>"5"}, {"id"=>"3", "position"=>"3"}, {"id"=>"4", "position"=>"4"}]
+      it 'updates position for each queue items' do
+        item1 = Fabricate(:queue_item, user: current_user, position: 1)
+        item2 = Fabricate(:queue_item, user: current_user, position: 2)
+        post :bulk_update, "queue_items"=>[{"id"=>"#{item1.id}", "position"=>"#{item2.position}"}, {"id"=>"#{item2.id}", "position"=>"#{item1.position}"}]
+        expect(item1.reload.position).to eq 2
+        expect(item2.reload.position).to eq 1
+      end
+    end
+
     describe 'GET destroy' do
       it 'removes the queue item from the queue' do
         queue_item1 = Fabricate(:queue_item, user: current_user)

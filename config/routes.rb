@@ -19,6 +19,8 @@ Myflix::Application.routes.draw do
 
   resources :queue_items, only: [:create, :destroy]
 
+  post '/my_queue', to: 'queue_items#bulk_update'
+
   get '/genre/:id', to: 'videos#index_by_category', as: 'genre'
 
   get 'ui(/:action)', controller: 'ui'
