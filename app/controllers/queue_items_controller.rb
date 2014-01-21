@@ -13,6 +13,7 @@ class QueueItemsController < ApplicationController
 
   def update_queue
     update_queue_item_positions
+    update_video_ratings
     redirect_to my_queue_path
   end
 
@@ -54,5 +55,17 @@ class QueueItemsController < ApplicationController
       current_user.normalize_position_number
     end
   end
+
+  def update_video_ratings
+    params[:queue_items].each do |item_param|
+      new_rating = item_param['rating']
+      if new_rating.present?
+        queue_item = QueueItem.find(item_param['id'])
+        queue_item.rating = new_rating if current_user.queue_items_include?(queue_item)
+      end
+    end
+  end
+
+
 
 end

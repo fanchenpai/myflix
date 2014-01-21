@@ -4,6 +4,7 @@
       %article
         %header
           %h2 My Queue
+        - options = [5,4,3,2,1].map { |i| [pluralize(i,'Star'), i] }
         = form_tag do
           %table.table
             %thead
@@ -25,8 +26,8 @@
                     = link_to queue_item.video_title, video_path(queue_item.video)
                   %td
                     = button_to "Play", nil, class: "btn btn-default"
-                  %td
-                    = queue_item.rating
+                  %td(align='center')
+                    = select_tag "queue_items[][rating]", options_for_select(options, queue_item.rating), {include_blank: queue_item.rating.nil? , class: 'form-control' }
                   %td
                     = link_to queue_item.category_name, genre_path(queue_item.category)
                   %td

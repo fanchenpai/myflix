@@ -7,7 +7,7 @@ class Video < ActiveRecord::Base
   delegate :name, to: :category, prefix: :category
 
   def average_rating
-    self.reviews.average(:rating).round(1).to_s unless self.reviews.empty?
+    reviews.average(:rating).round(1).to_s unless reviews.empty?
   end
 
   def self.search_by_title(search_term)
