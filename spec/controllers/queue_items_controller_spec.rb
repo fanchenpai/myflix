@@ -110,11 +110,11 @@ describe QueueItemsController do
         end
       end
       context 'with queue items that do not belong to current logged in user' do
-        let (:user2) { Fabricate(:user) }
-        let (:item1) { Fabricate(:queue_item, user: user2, position: 1) }
-        let (:item2) { Fabricate(:queue_item, user: current_user, position: 1) }
-        let (:review1) { Fabricate(:review, video: item1.video, user: user2, rating: 5) }
-        let (:review2) { Fabricate(:review, video: item2.video, user: current_user, rating: 3) }
+        let! (:user2) { Fabricate(:user) }
+        let! (:item1) { Fabricate(:queue_item, user: user2, position: 1) }
+        let! (:item2) { Fabricate(:queue_item, user: current_user, position: 1) }
+        let! (:review1) { Fabricate(:review, video: item1.video, user: user2, rating: 5) }
+        let! (:review2) { Fabricate(:review, video: item2.video, user: current_user, rating: 3) }
         before do
           post :update_queue, queue_items: [{id: item1.id, position: 5, rating: 1}, {id: item2.id, position: 2, rating: 1}]
         end
@@ -123,8 +123,8 @@ describe QueueItemsController do
           expect(item2.reload.position).to eq 1
         end
         it 'does not update the video rating' do
-          expect(item1.reload.rating).to be_nil
-          expect(item2.reload.rating).to eq 1
+          expect(item1.reload.rating).to eq 5
+          expect(item2.reload.rating).to eq 3
         end
         it 'sets the flash message' do
           expect(flash[:error]).not_to be_blank

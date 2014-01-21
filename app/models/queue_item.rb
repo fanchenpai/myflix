@@ -13,11 +13,9 @@ class QueueItem < ActiveRecord::Base
   end
 
   def rating= (new_rating)
-    review = Review.find_or_initialize_by(user: user, video: video) do |review|
-      review.detail = '.' if review.detail.nil?
-    end
+    review = Review.find_or_initialize_by(user: user, video: video)
     review.rating = new_rating
-    review.save!
+    review.save!(validate: false)
   end
 
 end

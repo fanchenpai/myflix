@@ -21,13 +21,14 @@ class User < ActiveRecord::Base
     end
   end
 
-  def update_queue_item_position(item_id, new_position)
+  def update_queue_item(item_id, new_position, new_rating=nil)
     item = QueueItem.find(item_id)
     if queue_items.include?(item)
       item.position = new_position
+      item.rating = new_rating if new_rating.to_i > 0
       item.save!
     else
-      raise 'You can only re-order videos in your queue.'
+      raise 'You can only manage videos in your queue.'
     end
   end
 
