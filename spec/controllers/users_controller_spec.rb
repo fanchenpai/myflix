@@ -1,10 +1,5 @@
 require 'spec_helper'
 
-describe 'Routing' do
-  it { should route(:get, '/register').to('users#new') }
-  it { should route(:post, '/users').to('users#create') }
-end
-
 describe UsersController do
   describe 'GET new' do
     before { get :new }
