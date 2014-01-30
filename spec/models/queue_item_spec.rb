@@ -3,6 +3,7 @@ require 'spec_helper'
 describe QueueItem do
   it { should belong_to(:user) }
   it { should belong_to(:video) }
+  it { should validate_numericality_of(:position).only_integer }
 
   describe '#video_title' do
     it 'returns title of the associated video' do
@@ -42,4 +43,19 @@ describe QueueItem do
       expect(queue_item1.rating).to be_nil
     end
   end
+
+  describe '#rating=' do
+    let(:item1) { Fabricate(:queue_item) }
+    it 'updates the rating if a review already exists' do
+      review1 = Fabricate(:review, video: item1.video, user: item1.user, rating: 3)
+      item1.rating = 5
+      expect(Review.first.rating).to eq 5
+    end
+    it 'creates a new review with only rating info if no review was found' do
+      item1.rating = 5
+      expect(Review.count).to eq 1
+      expect(Review.first.rating).to eq 5
+    end
+  end
+
 end

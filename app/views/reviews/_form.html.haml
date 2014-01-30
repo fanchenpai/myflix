@@ -3,8 +3,7 @@
   %fieldset
     .row
       .col-sm-3
-        - options = [5,4,3,2,1].map { |i| [pluralize(i,'Star'), i] }
-        = f.select :rating, options_for_select(options), {}, label: "Rate this video"
+        = f.select :rating, options_for_video_rating, {}, label: "Rate this video"
     .row
       .col-sm-8
         = f.text_field :title, label: 'Write Review', placeholder: 'Headline or summary for your review'

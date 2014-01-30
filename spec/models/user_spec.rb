@@ -18,4 +18,27 @@ describe User do
     should validate_uniqueness_of(:email).case_insensitive
   end
 
+  describe '#update_queue_item' do
+    let (:user1) { Fabricate(:user) }
+    let (:item1) { Fabricate(:queue_item, user: user1, position: 3) }
+
+    it 'updates queue items position' do
+      user1.update_queue_item(item1.id, 1)
+      expect(QueueItem.first.position).to eq 1
+    end
+    it 'updates rating if a review exists' do
+      review1 = Fabricate(:review, user: user1, video: item1.video, rating: 3)
+      user1.update_queue_item(item1.id, 1, 5)
+      expect(QueueItem.first.rating).to eq 5
+    end
+    it 'creates a review if new rating is passed in and no review exists yet' do
+      user1.update_queue_item(item1.id, 1, 5)
+      expect(Review.count).to eq 1
+    end
+    it 'raises error when a user try to update a queue item that is not in her/his queue' do
+      item2 = Fabricate(:queue_item)
+      expect{ user1.update_queue_item(item2.id, 1, 5) }.to raise_error
+    end
+  end
+
 end
