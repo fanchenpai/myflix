@@ -14,8 +14,6 @@ gem 'bootstrap_form'
 group :development do
   gem 'sqlite3'
   gem 'thin'
-  #gem "better_errors"
-  #gem "binding_of_caller"
   gem 'meta_request'
 end
 
@@ -30,6 +28,7 @@ end
 group :test do
   gem 'shoulda-matchers'
   gem 'capybara'
+  gem 'launchy'
 end
 
 group :production do
