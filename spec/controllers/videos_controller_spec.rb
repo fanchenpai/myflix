@@ -1,75 +1,72 @@
 require 'spec_helper'
 
 describe VideosController do
-  context "with user logged in successfully" do
-    before { session[:user_id] = Fabricate(:user).id }
 
+  describe "GET index" do
     let (:video1) { Fabricate(:video) }
     let (:video2) { Fabricate(:video) }
-
-    describe "GET index" do
-      before { get :index }
-      it "sets the videos variable" do
-        expect(assigns(:videos)).to eq [video1, video2]
-      end
-      it "sets the categories variable" do
-        expect(assigns(:categories)).to eq [video1.category, video2.category]
-      end
+    before { set_current_user }
+    it "sets the videos variable" do
+      get :index
+      expect(assigns(:videos)).to eq [video1, video2]
     end
-
-    describe "GET show" do
-      before { get :show , id: video1.id }
-      it "sets the video variable" do
-        expect(assigns(:video)).to eq video1
-      end
-      it "has reviews associated with the the video" do
-        review1 = Fabricate(:review, video: video1)
-        review2 = Fabricate(:review, video: video1)
-        expect(assigns(:video).reviews).to match_array [review1, review2]
-      end
-      it "sets the review variable" do
-        expect(assigns(:review)).to be_new_record
-        expect(assigns(:review)).to be_instance_of(Review)
-      end
+    it "sets the categories variable" do
+      get :index
+      expect(assigns(:categories)).to eq [video1.category, video2.category]
     end
-
-    describe "POST search" do
-      before { post :search, search_term: video1.title[0..3]}
-      it "sets the videos variable from input parameters" do
-        expect(assigns(:videos)).to eq [video1]
-      end
-    end
-
-    describe "GET index_by_category" do
-      before { get :index_by_category, id: video1.category.id }
-      it "sets the category variable" do
-        expect(assigns(:category)).to eq video1.category
-      end
-      it "renders the genre template" do
-        expect(response).to render_template :genre
-      end
+    it_behaves_like :require_user_login do
+      let(:action)  { get :index }
     end
   end
 
-  context "without user logged in" do
-    describe "GET index" do
-      it "redirects to sign in" do
-        get :index
-        expect(response).to redirect_to :sign_in
-      end
+  describe "GET show" do
+    let (:video1) { Fabricate(:video) }
+    before { set_current_user }
+    it "sets the video variable" do
+      get :show , id: video1.id
+      expect(assigns(:video)).to eq video1
     end
-    describe "GET show" do
-      it "redirects to sign in" do
-        get :show, id: 1
-        expect(response).to redirect_to :sign_in
-      end
+    it "has reviews associated with the the video" do
+      review1 = Fabricate(:review, video: video1)
+      review2 = Fabricate(:review, video: video1)
+      get :show , id: video1.id
+      expect(assigns(:video).reviews).to match_array [review1, review2]
     end
+    it "sets the review variable" do
+      get :show , id: video1.id
+      expect(assigns(:review)).to be_new_record
+      expect(assigns(:review)).to be_instance_of(Review)
+    end
+    it_behaves_like :require_user_login do
+      let(:action)  { get :show , id: video1.id }
+    end
+  end
 
-    describe "POST search" do
-      it "redirects to sign in" do
-        post :search, search_term: 'test'
-        expect(response).to redirect_to :sign_in
-      end
+  describe "POST search" do
+    let (:video1) { Fabricate(:video) }
+    before { set_current_user }
+    it "sets the videos variable from input parameters" do
+      post :search, search_term: video1.title[0..3]
+      expect(assigns(:videos)).to eq [video1]
+    end
+    it_behaves_like :require_user_login do
+      let(:action)  { post :search, search_term: video1.title[0..3] }
+    end
+  end
+
+  describe "GET index_by_category" do
+    let (:video1) { Fabricate(:video) }
+    before { set_current_user }
+    it "sets the category variable" do
+      get :index_by_category, id: video1.category.id
+      expect(assigns(:category)).to eq video1.category
+    end
+    it "renders the genre template" do
+      get :index_by_category, id: video1.category.id
+      expect(response).to render_template :genre
+    end
+    it_behaves_like :require_user_login do
+      let(:action)  { get :index_by_category, id: video1.category.id }
     end
   end
 

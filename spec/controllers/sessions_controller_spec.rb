@@ -1,10 +1,5 @@
 require 'spec_helper'
 
-describe 'Routing' do
-  it { should route(:get, '/sign_in').to('sessions#new') }
-  it { should route(:get, '/sign_out').to('sessions#destroy') }
-end
-
 describe SessionsController do
 
   describe 'GET new' do
