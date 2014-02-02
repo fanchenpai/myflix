@@ -81,3 +81,15 @@ def expect_video_rating(video, rating_text)
     expect(has_select?('queue_items[][rating]', selected: rating_text)).to be_true
   end
 end
+
+def select_video_rating(video, rating)
+  within("#video_#{video.id}") do
+    select(rating, from: 'queue_items[][rating]')
+  end
+end
+
+def expect_video_rating(video, rating_text)
+  within("#video_#{video.id}") do
+    expect(has_select?('queue_items[][rating]', selected: rating_text)).to be_true
+  end
+end
