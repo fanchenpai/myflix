@@ -31,6 +31,10 @@ describe FollowershipsController do
       post :create, following: user2.id
       expect(Followership.count).to eq 1
     end
+    it 'does not allow one to follow self' do
+      post :create, following: current_user.id
+      expect(Followership.count).to eq 1
+    end
     it 'sets flash notice' do
       expect(flash[:notice]).not_to be_blank
     end
@@ -56,7 +60,7 @@ describe FollowershipsController do
       delete :destroy, id: followership1.id
       expect(Followership.all.count).to be 1
     end
-    it 'redirects to followingship index page (PEOPLE)' do
+    it 'redirects to followership index page (PEOPLE)' do
       followership1 = Fabricate(:followership, user_id: user2.id, follower_id: current_user.id)
       delete :destroy, id: followership1.id
       expect(response).to redirect_to followerships_path

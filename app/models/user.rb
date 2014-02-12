@@ -39,4 +39,12 @@ class User < ActiveRecord::Base
   def new_queue_item_position
     queue_items.count + 1
   end
+
+  def following?(user)
+    leaders.include?(user)
+  end
+
+  def can_follow?(user)
+    !following?(user) && self != user
+  end
 end

@@ -48,14 +48,26 @@ describe User do
 
   describe '#queued_video?' do
     let (:user1) { Fabricate(:user) }
-    it 'return true if video is already queued' do
+    it 'returns true if video is already queued' do
       video1 =  Fabricate(:video)
       Fabricate(:queue_item, user: user1, video: video1)
       expect(user1.queued_video?(video1)).to be_true
     end
-    it 'return false if video is not yet queued' do
+    it 'returns false if video is not yet queued' do
       video2 = Fabricate(:video)
       expect(user1.queued_video?(video2)).to be_false
+    end
+  end
+
+  describe '#following?' do
+    let (:current_user) { Fabricate(:user) }
+    let (:user2) { Fabricate(:user) }
+    it 'returns true if current user is a follower of the passed in user' do
+      Fabricate(:followership, user: user2, follower: current_user)
+      expect(current_user.following?(user2)).to be_true
+    end
+    it 'returns false if current user is not a follower of the passed in user' do
+      expect(current_user.following?(user2)).to be_false
     end
   end
 

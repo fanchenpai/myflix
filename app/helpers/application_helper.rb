@@ -14,9 +14,12 @@ module ApplicationHelper
       alert: 'alert-warning',
       error: 'alert-danger' }[flash_type.to_sym] || 'alert-warning'
   end
+
   def options_for_video_rating(selected=nil)
     options_for_select([5,4,3,2,1].map { |i| [pluralize(i,'Star'), i] }, selected)
-
   end
 
+  def gravatar(email)
+    image_tag("http://www.gravatar.com/avatar/#{Digest::MD5.hexdigest(email.downcase)}?s=40")
+  end
 end
