@@ -6,6 +6,11 @@ describe User do
   it { should have_db_column(:email) }
   it { should have_db_column(:password_digest) }
   it { should have_many(:reviews).order('created_at DESC') }
+  it { should have_many(:queue_items).order('position') }
+  it { should have_many(:followerships) }
+  it { should have_many(:followers).order('created_at DESC').through(:followerships) }
+  it { should have_many(:leaderships).class_name('Followership') }
+  it { should have_many(:leaders).order('created_at DESC').through(:leaderships) }
   it { should validate_presence_of(:email) }
   it { should validate_presence_of(:password_digest) }
   it { should validate_presence_of(:full_name) }

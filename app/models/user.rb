@@ -1,6 +1,10 @@
 class User < ActiveRecord::Base
   has_many :reviews, -> { order('created_at DESC') }
-  has_many :queue_items, -> { order('position')}
+  has_many :queue_items, -> { order('position') }
+  has_many :followerships
+  has_many :followers, -> { order('created_at DESC') }, through: :followerships
+  has_many :leaderships, class_name: 'Followership', foreign_key: 'follower_id'
+  has_many :leaders, -> { order('created_at DESC') }, through: :leaderships, source: :user
   validates :full_name, presence: true
   validates :email, presence: true, uniqueness: { case_sensitive: false }
   validates :password_digest, presence: true
