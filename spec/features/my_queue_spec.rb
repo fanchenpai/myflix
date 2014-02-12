@@ -15,6 +15,8 @@ feature 'my queue' do
     add_to_queue_and_expect_title(video2)
     add_to_queue_and_expect_title(video3)
 
+    expect_user_page_to_have_videos(user1, [video1,video2,video3])
+
     expect_add_to_queue_link(video1, false)
 
     visit my_queue_path
@@ -91,5 +93,12 @@ end
 def expect_video_rating(video, rating_text)
   within("#video_#{video.id}") do
     expect(has_select?('queue_items[][rating]', selected: rating_text)).to be_true
+  end
+end
+
+def expect_user_page_to_have_videos(user, videos)
+  visit user_path(user.id)
+  videos.each do |video|
+    expect(page).to have_link(video.title)
   end
 end

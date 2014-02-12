@@ -10,7 +10,6 @@ describe UsersController do
   end
 
   describe 'POST create' do
-
     context 'when inputs are valid and saved to db' do
       before { post :create, { user: Fabricate.attributes_for(:user) } }
       it 'sets the user variable' do
@@ -48,4 +47,16 @@ describe UsersController do
     end
   end
 
+  describe 'GET show' do
+    let(:user1) { Fabricate(:user) }
+    before { set_current_user }
+    it 'sets the user variable' do
+      get :show, id: user1.id
+      expect(assigns(:user)).to eq user1
+    end
+    it_behaves_like :require_user_login do
+      let(:action) { get :show, id: user1.id }
+    end
+
+  end
 end

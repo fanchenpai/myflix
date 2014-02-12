@@ -1,0 +1,21 @@
+%section.people
+  %header
+    %h2 People I Follow
+  %table.table
+    %thead
+      %tr
+        %th(width="30%")
+        %th(width="20%") Videos in Queue
+        %th(width="20%") Followers
+        %th(width="30%") Unfollow
+    %tbody
+      - @leaderships.each do |leadership|
+        %tr{id: "leader_#{leadership.user_id}"}
+          %td.pull-left
+            = gravatar(leadership.leader_email)
+            = link_to leadership.leader_full_name, user_path(leadership.user_id)
+          %td.extra-padding= leadership.leader_queue_items.count
+          %td.extra-padding.followers= leadership.followers.count
+          %td.extra-padding
+            = link_to followership_path(leadership.id), method: :delete, class: 'unfollow' do
+              %i.glyphicon.glyphicon-remove

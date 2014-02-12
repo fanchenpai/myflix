@@ -4,6 +4,8 @@ class Review < ActiveRecord::Base
   validates_presence_of :rating,:detail,:user_id, :video_id
   validates_uniqueness_of :user_id, scope: :video_id
 
+  delegate :title, to: :video, prefix: :video
+
   def creator_name
     self.user.full_name unless self.user.nil?
   end

@@ -1,7 +1,7 @@
 %article.review
   .col-sm-2
     %span Rating: #{review.rating} / 5
-    %p by <a href="">#{review.creator_name}</a>
+    %p= link_to "by #{review.creator_name}", user_path(review.user_id)
   .col-sm-8
     %p
       %h5= review.title
