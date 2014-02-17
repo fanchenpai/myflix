@@ -22,3 +22,5 @@ doc/
 .project
 .DS_Store
 .idea
+
+local_env.yml
