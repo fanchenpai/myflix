@@ -47,4 +47,10 @@ class User < ActiveRecord::Base
   def can_follow?(user)
     !following?(user) && self != user
   end
+
+  def generate_password_token
+    self.password_token = SecureRandom.urlsafe_base64
+    self.password_token_timestamp = Time.now
+  end
+
 end

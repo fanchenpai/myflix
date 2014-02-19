@@ -85,6 +85,6 @@ describe UsersController do
     it_behaves_like :require_user_login do
       let(:action) { get :show, id: user1.id }
     end
-
   end
+
 end
