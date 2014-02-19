@@ -10,6 +10,10 @@ Myflix::Application.routes.draw do
   resources :users, only: [:create, :show]
   get '/register', to: 'users#new'
 
+  get '/forgot_password', to: 'password_resets#new'
+  post '/confirm_password_reset', to: 'password_resets#create'
+  get '/reset_password/:token', to: 'password_resets#show', as: 'reset_password'
+
   resources :videos, only: [:show, :index] do
     collection do
       post 'search', to: 'videos#search'
