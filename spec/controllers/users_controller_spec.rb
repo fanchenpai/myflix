@@ -17,11 +17,11 @@ describe UsersController do
         expect(assigns(:user)).to be_valid
       end
       it 'saves to the db' do
-        expect(assigns(:user)).to eq User.first
+        expect(assigns(:user)).to eq User.last
       end
       it 'sets the session user_id' do
         expect(session[:user_id]).not_to be_nil
-        expect(session[:user_id]).to eq User.first.id
+        expect(session[:user_id]).to eq User.last.id
       end
       it 'sets flash notice' do
         expect(flash[:success]).not_to be nil
