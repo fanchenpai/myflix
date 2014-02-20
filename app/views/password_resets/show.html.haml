@@ -4,7 +4,11 @@
       = bootstrap_form_for @user, include_id: false, url: reset_password_path(@user.password_token) do |f|
         %header
           %h1 Reset Your Password
-        = f.password_field :password, label: "New Password", help: "Must be at least 3 characters long"
-        = f.password_field :password_confirmation, label: "Confirm Password"
+        .row
+          .col-sm-4
+            = f.password_field :password, label: "New Password", help: "Must be at least 3 characters long"
+        .row
+          .col-sm-4
+            = f.password_field :password_confirmation, label: "Confirm Password"
         %fieldset.form-group.action
           = submit_tag "Reset Password", class: "btn btn-default"

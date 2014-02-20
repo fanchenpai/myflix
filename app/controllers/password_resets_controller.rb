@@ -1,12 +1,11 @@
 class PasswordResetsController < ApplicationController
 
-  def new
-
-  end
-
   def create
     @user = User.search_by_email(params[:email])
-    unless @user.nil?
+    if @user.nil?
+      flash[:error] = "The email you provided is not in our system."
+      redirect_to :forgot_password
+    else
       @user.generate_password_token
       UserMailer.password_reset_email(@user).deliver
     end
@@ -27,7 +26,7 @@ class PasswordResetsController < ApplicationController
         render :show
       else
         @user.clear_password_token
-        flash[:notice] = 'Your password has been reset.'
+        flash[:success] = 'Your password has been reset.'
         redirect_to :sign_in
       end
     end

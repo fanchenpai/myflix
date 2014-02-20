@@ -9,6 +9,6 @@
           %label Email Address
           .row
             .col-sm-4
-              = email_field_tag :email, nil, class: 'form-control'
+              = email_field_tag :email, nil, required: true, class: 'form-control'
         .form-group.action
           = submit_tag "Send Email", class: "btn btn-default"
