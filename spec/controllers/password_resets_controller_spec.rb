@@ -36,10 +36,47 @@ describe PasswordResetsController do
       end
 
       it 'assigns nil to user variable' do
-        expect(assigns(:user)).to be nil
+        expect(assigns(:user)).to be_nil
       end
       it 'does send out password reset email' do
         expect(ActionMailer::Base.deliveries).to be_empty
+      end
+    end
+  end
+
+  describe 'GET show' do
+    context 'with valid token' do
+      it 'sets the user variable' do
+        user1 = Fabricate(:user)
+        user1.generate_password_token
+        user1.reload
+        get :show, token: user1.password_token
+        expect(assigns(:user)).to eq user1
+      end
+    end
+    context 'with invalid token' do
+      before { get :show, token: 'fake_token' }
+      it 'assigns nil to users variable' do
+        expect(assigns(:user)).to be_nil
+      end
+      it 'renders the invalid token page' do
+        expect(response).to render_template :invalid_token
+      end
+    end
+    context 'with expired token' do
+      let(:user1) { Fabricate(:user)}
+      before do
+        user1.generate_password_token
+        user1.password_token_timestamp = 10.days.ago
+        user1.save!(validate: false)
+        user1.reload
+        get :show, token: user1.password_token
+      end
+      it 'renders the invalid token page' do
+        expect(response).to render_template :invalid_token
+      end
+      it 'clears user password token in database' do
+        expect(User.find(user1.id).password_token).to be_nil
       end
     end
   end

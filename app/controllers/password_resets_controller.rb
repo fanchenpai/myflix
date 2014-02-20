@@ -5,16 +5,18 @@ class PasswordResetsController < ApplicationController
   end
 
   def create
-    @user = User.find_by_email(params[:email])
+    @user = User.search_by_email(params[:email])
     unless @user.nil?
       @user.generate_password_token
-      @user.save!(validate:false)
       UserMailer.password_reset_email(@user).deliver
     end
   end
 
   def show
-
+    @user = User.find_by_password_token(params[:token])
+    if @user.nil? || @user.token_expired?
+      render :invalid_token
+    end
   end
 
   def destroy
