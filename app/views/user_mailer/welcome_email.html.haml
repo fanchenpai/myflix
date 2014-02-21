@@ -1,0 +1,14 @@
+!!! 5
+%html
+  %head
+    %meta{content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+  %body
+    %h1
+      Welcome to MyFLiX.com, #{@user.full_name}
+    %p
+      You have successfully signed up to MyFLiX.com,
+      your login email is: #{@user.email}.
+      %br/
+    %p
+      To login to the site, just follow this link: #{@url}.
+    %p Thanks for joining and have a great day!

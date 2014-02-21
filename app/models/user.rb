@@ -11,6 +11,8 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 3 }
   has_secure_password
 
+  TOKEN_VALID_PERIOD = 1.day
+
   def queued_video?(video)
     queue_items.map(&:video).include?(video)
   end
@@ -47,4 +49,30 @@ class User < ActiveRecord::Base
   def can_follow?(user)
     !following?(user) && self != user
   end
+
+  def generate_password_token
+    self.password_token = SecureRandom.urlsafe_base64
+    self.password_token_timestamp = Time.now
+    self.save!(validate:false)
+  end
+
+  def clear_password_token
+    self.password_token = nil
+    self.password_token_timestamp = nil
+    self.save!(validate: false)
+  end
+
+  def token_expired?
+    if self.password_token_timestamp + TOKEN_VALID_PERIOD < Time.now
+      clear_password_token
+      true
+    else
+      false
+    end
+  end
+
+  def self.search_by_email(email)
+    User.where('lower(email) = ?', email.downcase).first
+  end
+
 end

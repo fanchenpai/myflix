@@ -10,6 +10,7 @@ class UsersController < ApplicationController
     if @user.save
       flash[:success] = "Your account has been created."
       session[:user_id] = @user.id
+      UserMailer.welcome_email(@user).deliver
       redirect_to videos_path
     else
       render :new

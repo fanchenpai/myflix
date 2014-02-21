@@ -17,11 +17,11 @@ describe UsersController do
         expect(assigns(:user)).to be_valid
       end
       it 'saves to the db' do
-        expect(assigns(:user)).to eq User.first
+        expect(assigns(:user)).to eq User.last
       end
       it 'sets the session user_id' do
         expect(session[:user_id]).not_to be_nil
-        expect(session[:user_id]).to eq User.first.id
+        expect(session[:user_id]).to eq User.last.id
       end
       it 'sets flash notice' do
         expect(flash[:success]).not_to be nil
@@ -33,6 +33,7 @@ describe UsersController do
 
     context 'when inputs are not valid' do
       before do
+        ActionMailer::Base.deliveries.clear
         post :create, { user: { full_name: 'test', email: 'test'} }
       end
       it 'set the user variable that marked invalid' do
@@ -43,6 +44,33 @@ describe UsersController do
       end
       it 'renders the new template' do
         expect(response).to render_template :new
+      end
+      it 'does not send out welcome mail' do
+        expect(ActionMailer::Base.deliveries).to be_empty
+        ActionMailer::Base.deliveries.clear
+      end
+    end
+
+    context "when sending welcome email" do
+      before do
+        post :create, {
+          user: {
+            full_name: 'Alice Wonderland',
+            email: 'alice@test.com',
+            password: 'password',
+            password_confirmation: 'password'
+          }
+        }
+      end
+      after { ActionMailer::Base.deliveries.clear }
+      it 'sends out the email' do
+        expect(ActionMailer::Base.deliveries).not_to be_empty
+      end
+      it 'sends to the right recepient' do
+        expect(ActionMailer::Base.deliveries.last.to[0]).to eq 'alice@test.com'
+      end
+      it 'has the correct message content' do
+        expect(ActionMailer::Base.deliveries.last.body).to include 'Alice Wonderland'
       end
     end
   end
@@ -57,6 +85,6 @@ describe UsersController do
     it_behaves_like :require_user_login do
       let(:action) { get :show, id: user1.id }
     end
-
   end
+
 end
