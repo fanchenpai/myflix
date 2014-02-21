@@ -1,23 +1,22 @@
 class PasswordResetsController < ApplicationController
+  before_action :find_user, only: [:show, :update]
 
   def create
     @user = User.search_by_email(params[:email])
-    if @user.nil?
-      flash[:error] = "The email you provided is not in our system."
-      redirect_to :forgot_password
-    else
+    if @user
       @user.generate_password_token
       UserMailer.password_reset_email(@user).deliver
+    else
+      flash[:error] = "The email you provided is not in our system."
+      redirect_to :forgot_password
     end
   end
 
   def show
-    find_user
     render :invalid_token if token_invalid?
   end
 
   def update
-    find_user
     if token_invalid?
       render :invalid_token
     else
