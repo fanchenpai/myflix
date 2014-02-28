@@ -6,11 +6,8 @@ class FollowershipsController < ApplicationController
 
   def create
     user = User.find(params[:following])
-    if current_user.can_follow?(user)
-      followership = user.followerships.build(follower: current_user)
-      if followership.save
-        flash[:notice] = 'You are now following this user'
-      end
+    if current_user.follow(user)
+      flash[:notice] = 'You are now following this user'
     end
     redirect_to user_path(user)
   end

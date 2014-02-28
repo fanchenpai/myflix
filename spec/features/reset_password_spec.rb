@@ -2,8 +2,9 @@ require 'spec_helper'
 
 feature 'resetting password' do
   given!(:user1) { Fabricate(:user) }
+  before { clear_emails }
+
   scenario 'user goes through password reset process' do
-    clear_emails
     visit_forgot_email_page
     fill_in_email
     expect_email_to_be_valid

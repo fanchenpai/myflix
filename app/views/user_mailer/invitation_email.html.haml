@@ -1,0 +1,13 @@
+!!! 5
+%html
+  %head
+    %meta{content: "text/html; charset=UTF-8", "http-equiv" => "Content-Type"}/
+  %body
+    %h4
+      You friend #{@user.full_name} invites you to join MyFLiX
+    %p= @invitation.message
+    %hr
+    %p
+      To register, just follow
+      #{link_to "this link", invitation_url(@invitation.token)}.
+    %p Thanks for joining and have a great day!

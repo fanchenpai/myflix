@@ -9,6 +9,31 @@ describe UsersController do
     end
   end
 
+  describe 'GET new_via_invitation' do
+    let(:invitation1) { Fabricate(:invitation) }
+    context 'with valid token' do
+      before { get :new_via_invitation, token: invitation1.token }
+      it "sets the invitation variable" do
+        expect(assigns(:invitation)).to eq invitation1
+      end
+      it "sets the user variable" do
+        expect(assigns(:user)).to be_instance_of(User)
+      end
+      it "renders the new template" do
+        expect(response).to render_template :new
+      end
+    end
+    context 'without valid token' do
+      before { get :new_via_invitation, token: "fake_token" }
+      it "sets flash error message" do
+        expect(flash[:error]).not_to be_empty
+      end
+      it "redirects to the regular register page" do
+        expect(response).to redirect_to :register
+      end
+    end
+  end
+
   describe 'POST create' do
     context 'when inputs are valid and saved to db' do
       before { post :create, { user: Fabricate.attributes_for(:user) } }
@@ -28,6 +53,26 @@ describe UsersController do
       end
       it 'redirects to videos path' do
         expect(response).to redirect_to videos_path
+      end
+    end
+
+    context 'when register through invitation' do
+      let(:user1) { Fabricate(:user) }
+      before do
+        invitation = Fabricate(:invitation, user_id: user1.id)
+        post :create, {
+          user: Fabricate.attributes_for(:user),
+          invitation: invitation.token }
+      end
+      it 'sets the invitation variable' do
+        expect(assigns(:invitation)).to eq Invitation.last
+      end
+
+      it 'sets the new user to follow inviter' do
+        expect(user1.followers).to include User.last
+      end
+      it 'set the inviter to follow the new user' do
+        expect(User.last.followers).to include user1
       end
     end
 

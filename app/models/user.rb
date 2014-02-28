@@ -50,6 +50,10 @@ class User < ActiveRecord::Base
     !following?(user) && self != user
   end
 
+  def follow(user)
+    leaderships.create(user: user, follower: self) if can_follow?(user)
+  end
+
   def generate_password_token
     self.password_token = SecureRandom.urlsafe_base64
     self.password_token_timestamp = Time.now
