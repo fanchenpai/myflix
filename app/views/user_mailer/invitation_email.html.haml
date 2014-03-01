@@ -8,6 +8,6 @@
     %p= @invitation.message
     %hr
     %p
-      To register, just follow
-      #{link_to "this link", invitation_url(@invitation.token)}.
+      Please use the following link to register:
+      #{link_to "Join MyFLiX", invitation_url(@invitation.token)}.
     %p Thanks for joining and have a great day!

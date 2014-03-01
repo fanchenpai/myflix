@@ -19,13 +19,4 @@ class Invitation < ActiveRecord::Base
     self.save!(validate: false)
   end
 
-  # def token_expired?
-  #   if self.token_timestamp + TOKEN_VALID_PERIOD < Time.now
-  #     clear_token
-  #     true
-  #   else
-  #     false
-  #   end
-  # end
-
 end
