@@ -40,20 +40,28 @@ describe InvitationsController do
         mail = ActionMailer::Base.deliveries.last
         expect(mail.body).to include Invitation.last.token
       end
+      it 'redirects to the invite page' do
+        expect(response).to redirect_to :invite
+      end
     end
     context "without valid input" do
       before do
         set_current_user
         post :create, invitation: {full_name: 'test'}
       end
+      it "does not create invitation" do
+        expect(Invitation.all.count).to be 0
+      end
       it "causes error when email field is not filled in" do
         expect(assigns(:invitation).errors).not_to be_empty
+      end
+      it "does not send out invitation email" do
+        expect(ActionMailer::Base.deliveries).to be_empty
       end
       it "renders the new template" do
         expect(response).to render_template :new
       end
     end
-
     it_behaves_like :require_user_login do
       let(:action) { post :create }
     end

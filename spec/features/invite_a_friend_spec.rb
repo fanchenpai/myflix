@@ -3,10 +3,11 @@ require 'spec_helper'
 feature 'inviting a friend' do
   let(:user1) { Fabricate(:user) }
   before { clear_emails }
+  after { clear_emails }
 
   scenario 'user invite a friend and then friend register' do
     inviter_fill_in_invitation
-    invitee_register_with_invitation
+    invitee_register_via_invitation
     expect_them_following_each_other
   end
 
@@ -20,7 +21,7 @@ feature 'inviting a friend' do
     click_on "Sign Out"
   end
 
-  def invitee_register_with_invitation
+  def invitee_register_via_invitation
     current_email.click_link('Join MyFLiX')
     expect(page).to have_content 'Register'
     expect_name_and_email_prefilled

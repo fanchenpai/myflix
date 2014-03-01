@@ -9,7 +9,7 @@ class InvitationsController < ApplicationController
     if @invitation.save
       UserMailer.invitation_email(@invitation).deliver
       flash[:success] = "Your invitations has been sent."
-      redirect_to :root
+      redirect_to :invite
     else
       render :new
     end

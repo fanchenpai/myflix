@@ -3,8 +3,6 @@ class Invitation < ActiveRecord::Base
   validates_presence_of :email, :user_id
   before_create :generate_token
 
-  TOKEN_VALID_PERIOD = 90.day
-
   def fulfilled(user)
     clear_token
     update_attribute(:new_user_id, user.id)
