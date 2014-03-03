@@ -29,7 +29,7 @@ feature 'resetting password' do
     expect(current_email).to have_link "reset your password"
     expect(current_email.to[0]).to eq user1.email
     link = current_email.find_link('reset your password')
-    expect(link[:href]).to have_content user1.reload.password_token
+    expect(link[:href]).to have_content user1.reload.token
   end
   def visit_password_reset_page_via_email_link
     current_email.click_link('reset your password')

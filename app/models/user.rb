@@ -1,4 +1,5 @@
 class User < ActiveRecord::Base
+  include Tokenable
   has_many :reviews, -> { order('created_at DESC') }
   has_many :queue_items, -> { order('position') }
   has_many :followerships
@@ -11,7 +12,7 @@ class User < ActiveRecord::Base
   validates :password, length: { minimum: 3 }
   has_secure_password
 
-  TOKEN_VALID_PERIOD = 1.day
+  TokenValidPeriod = 1.day
 
   def queued_video?(video)
     queue_items.map(&:video).include?(video)
@@ -52,27 +53,6 @@ class User < ActiveRecord::Base
 
   def follow(user)
     leaderships.create(user: user, follower: self) if can_follow?(user)
-  end
-
-  def generate_password_token
-    self.password_token = SecureRandom.urlsafe_base64
-    self.password_token_timestamp = Time.now
-    self.save!(validate:false)
-  end
-
-  def clear_password_token
-    self.password_token = nil
-    self.password_token_timestamp = nil
-    self.save!(validate: false)
-  end
-
-  def token_expired?
-    if self.password_token_timestamp + TOKEN_VALID_PERIOD < Time.now
-      clear_password_token
-      true
-    else
-      false
-    end
   end
 
   def self.search_by_email(email)

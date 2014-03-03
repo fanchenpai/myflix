@@ -9,7 +9,7 @@ class UserMailer < ActionMailer::Base
   end
 
   def password_reset_email(user)
-    @token = user.password_token
+    @token = user.token
     mail(to: user.email,
          subject: 'Reset your password')
   end

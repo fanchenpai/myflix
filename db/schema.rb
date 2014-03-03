@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140226183235) do
+ActiveRecord::Schema.define(version: 20140303194119) do
 
   create_table "categories", force: true do |t|
     t.string   "name"
@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 20140226183235) do
     t.integer  "new_user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.datetime "token_timestamp"
   end
 
   create_table "queue_items", force: true do |t|
@@ -61,8 +62,8 @@ ActiveRecord::Schema.define(version: 20140226183235) do
     t.string   "password_digest"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "password_token"
-    t.datetime "password_token_timestamp"
+    t.string   "token"
+    t.datetime "token_timestamp"
   end
 
   create_table "videos", force: true do |t|
