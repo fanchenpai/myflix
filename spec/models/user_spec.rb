@@ -71,36 +71,8 @@ describe User do
     end
   end
 
-  describe '#generate_password_token' do
-    let (:user1) { Fabricate(:user) }
-    it 'sets the password_token and password_token_timestamp' do
-      user1.generate_password_token
-      expect(User.last.password_token).not_to be_nil
-      expect(User.last.password_token_timestamp).not_to be_nil
-    end
-  end
-
-  describe '#clear_password_token' do
-    let (:user1) { Fabricate(:user) }
-    before { user1.generate_password_token }
-    it 'clears the password token and token timestamp' do
-      user1.clear_password_token
-      expect(User.last.password_token).to be_nil
-      expect(User.last.password_token_timestamp).to be_nil
-    end
-  end
-
-  describe '#token_expired?' do
-    let (:user1) { Fabricate(:user) }
-    before { user1.generate_password_token }
-    it 'returns false if token is created within 1 day' do
-      expect(user1.token_expired?).to be_false
-    end
-    it 'returns true if token is older than 1 day' do
-      user1.password_token_timestamp = 10.days.ago
-      user1.save!(validate: false)
-      expect(user1.token_expired?).to be_true
-    end
+  it_behaves_like :tokenable do
+    let(:object) { Fabricate(:user) }
   end
 
 end

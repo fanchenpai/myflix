@@ -14,14 +14,17 @@ end
 
 shared_examples :require_fresh_token do
   context 'with expired token' do
-    let(:user1) { Fabricate(:user, password_token: '12345', password_token_timestamp: 10.days.ago)}
-    let(:token) { user1.password_token }
-    before { action }
+    let(:user1) { Fabricate(:user)}
+    let(:token) { user1.token }
+    before do
+      user1.update_attribute('token_timestamp', 10.days.ago)
+      action
+    end
     it 'renders the invalid token page' do
       expect(response).to render_template :invalid_token
     end
     it 'clears user password token in database' do
-      expect(User.find(user1.id).password_token).to be_nil
+      expect(User.find(user1.id).token).to be_nil
     end
   end
 end
@@ -37,7 +40,7 @@ describe PasswordResetsController do
         expect(assigns(:user)).to eq user1
       end
       it 'generates a token' do
-        expect(assigns(:user).password_token).not_to be_empty
+        expect(assigns(:user).token).not_to be_empty
       end
       it 'sends out password reset email' do
         expect(ActionMailer::Base.deliveries).not_to be_empty
@@ -48,11 +51,11 @@ describe PasswordResetsController do
       end
       it 'includes the token in email content' do
         mail = ActionMailer::Base.deliveries.last
-        expect(mail.body).to include user1.reload.password_token
+        expect(mail.body).to include user1.reload.token
       end
       it 'includes the password reset link in email content' do
         mail = ActionMailer::Base.deliveries.last
-        expect(mail.body).to include reset_password_path(user1.reload.password_token)
+        expect(mail.body).to include reset_password_path(user1.reload.token)
       end
     end
     context 'with non-existing email input' do
@@ -79,8 +82,8 @@ describe PasswordResetsController do
   describe 'GET show' do
     context 'with valid token' do
       it 'sets the user variable' do
-        user1 = Fabricate(:user, password_token: '12345', password_token_timestamp: Time.now)
-        get :show, token: user1.password_token
+        user1 = Fabricate(:user, token: '12345', token_timestamp: Time.now)
+        get :show, token: user1.token
         expect(assigns(:user)).to eq user1
       end
     end
@@ -95,10 +98,10 @@ describe PasswordResetsController do
   describe 'POST update' do
     context 'with valid token' do
       context 'with valid input' do
-        let(:user1) { Fabricate(:user, password_token: '12345', password_token_timestamp: Time.now) }
+        let(:user1) { Fabricate(:user, token: '12345', token_timestamp: Time.now) }
         before do
           post :update, {
-            token: user1.password_token,
+            token: user1.token,
             user: {
               password: 'new_password',
               password_confirmation: 'new_password'
@@ -112,7 +115,7 @@ describe PasswordResetsController do
           expect(User.find(user1.id).authenticate('new_password')).to be_true
         end
         it 'clears user password token' do
-          expect(User.find(user1.id).password_token).to be_nil
+          expect(User.find(user1.id).token).to be_nil
         end
         it 'sets flash notice' do
           expect(flash[:success]).not_to be_nil
@@ -122,10 +125,10 @@ describe PasswordResetsController do
         end
       end
       context 'with invalid input' do
-        let(:user1) { Fabricate(:user, password_token: '12345', password_token_timestamp: Time.now) }
+        let(:user1) { Fabricate(:user, token: '12345', token_timestamp: Time.now) }
         it 'renders the reset password form' do
           post :update, {
-            token: user1.password_token,
+            token: user1.token,
             user: {
               password: '123',
               password_confirmation: '456'
