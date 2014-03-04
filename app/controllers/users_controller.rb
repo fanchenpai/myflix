@@ -7,12 +7,12 @@ class UsersController < ApplicationController
 
   def new_via_invitation
     @invitation = Invitation.find_by_token(params[:token])
-    if @invitation.nil?
-      flash[:error] = "This invitation has expired."
-      redirect_to register_path
-    else
+    if @invitation
       @user = User.new(email: @invitation.email, full_name: @invitation.full_name)
       render :new
+    else
+      flash[:error] = "This invitation has expired."
+      redirect_to register_path
     end
   end
 
