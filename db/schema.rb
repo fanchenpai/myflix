@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140303194119) do
+ActiveRecord::Schema.define(version: 20140304194203) do
 
   create_table "categories", force: true do |t|
     t.string   "name"
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20140303194119) do
   create_table "invitations", force: true do |t|
     t.string   "email"
     t.string   "full_name"
-    t.string   "message"
+    t.text     "message"
     t.string   "token"
     t.integer  "user_id"
     t.integer  "new_user_id"
@@ -49,7 +49,7 @@ ActiveRecord::Schema.define(version: 20140303194119) do
   create_table "reviews", force: true do |t|
     t.integer  "rating"
     t.string   "title"
-    t.string   "detail"
+    t.text     "detail"
     t.integer  "video_id"
     t.integer  "user_id"
     t.datetime "created_at"
@@ -68,7 +68,7 @@ ActiveRecord::Schema.define(version: 20140303194119) do
 
   create_table "videos", force: true do |t|
     t.string   "title"
-    t.string   "description"
+    t.text     "description"
     t.string   "small_cover_url"
     t.string   "large_cover_url"
     t.datetime "created_at"
