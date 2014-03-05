@@ -13,11 +13,15 @@ gem 'bootstrap_form'
 gem 'faker'
 gem 'fabrication'
 
+gem 'sidekiq'
+
 group :development do
   gem 'sqlite3'
   gem 'thin'
   gem 'meta_request'
   gem 'letter_opener'
+  gem 'sinatra', require: false
+  gem 'slim'
 end
 
 group :development, :test do

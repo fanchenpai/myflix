@@ -7,7 +7,7 @@ class InvitationsController < ApplicationController
   def create
     @invitation = Invitation.new(invitation_params)
     if @invitation.save
-      UserMailer.invitation_email(@invitation).deliver
+      UserMailer.delay.invitation_email(@invitation.id)
       flash[:success] = "Your invitations has been sent."
       redirect_to :invite
     else
