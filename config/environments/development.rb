@@ -1,3 +1,5 @@
+$stdout.sync = true
+
 Myflix::Application.configure do
   config.cache_classes = false
 
