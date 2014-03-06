@@ -5,7 +5,7 @@ class PasswordResetsController < ApplicationController
     @user = User.search_by_email(params[:email])
     if @user
       @user.generate_token(true)
-      UserMailer.password_reset_email(@user).deliver
+      UserMailer.delay.password_reset_email(@user.id)
     else
       flash[:error] = "The email you provided is not in our system."
       redirect_to :forgot_password

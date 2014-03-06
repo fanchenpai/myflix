@@ -1,5 +1,6 @@
-Myflix::Application.routes.draw do
+require 'sidekiq/web' if Rails.env.development?
 
+Myflix::Application.routes.draw do
 
   root to: 'pages#front'
 
@@ -34,6 +35,8 @@ Myflix::Application.routes.draw do
 
   resources :followerships, only: [:index, :create, :destroy]
 
-  get 'ui(/:action)', controller: 'ui'
-
+  if Rails.env.development?
+    get 'ui(/:action)', controller: 'ui'
+    mount Sidekiq::Web, at: '/sidekiq'
+  end
 end

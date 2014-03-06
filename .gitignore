@@ -24,3 +24,5 @@ doc/
 .idea
 
 local_env.yml
+Procfile.development
+.foreman

@@ -23,7 +23,7 @@ class UsersController < ApplicationController
       redeem_invitation
       flash[:success] = "Your account has been created."
       session[:user_id] = @user.id
-      UserMailer.welcome_email(@user).deliver
+      UserMailer.delay.welcome_email(@user.id)
       redirect_to videos_path
     else
       render :new
