@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery
-  helper_method :current_user, :logged_in?
+  helper_method :current_user, :logged_in?, :admin?
 
   def current_user
     @current_user ||=User.find(session[:user_id]) if session[:user_id]
@@ -10,11 +10,7 @@ class ApplicationController < ActionController::Base
     !!current_user
   end
 
-  def require_user
-    unless logged_in?
-      flash[:error] = "You are trying to access a member-only feature. Please sign in first."
-      redirect_to sign_in_path
-    end
+  def admin?
+    current_user.admin?
   end
-
 end

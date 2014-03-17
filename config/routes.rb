@@ -35,6 +35,10 @@ Myflix::Application.routes.draw do
 
   resources :followerships, only: [:index, :create, :destroy]
 
+  namespace :admin do
+    resources :videos, only: [:new, :create]
+  end
+
   if Rails.env.development?
     get 'ui(/:action)', controller: 'ui'
     mount Sidekiq::Web, at: '/sidekiq'

@@ -1,5 +1,5 @@
-class UsersController < ApplicationController
-  before_action :require_user, only: [:show]
+class UsersController < AuthenticatedController
+  skip_before_action :ensure_log_in , except: [:show]
 
   def new
     @user = User.new

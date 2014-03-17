@@ -8,7 +8,7 @@ describe InvitationsController do
       expect(assigns(:invitation)).to be_new_record
       expect(assigns(:invitation)).to be_instance_of(Invitation)
     end
-    it_behaves_like :require_user_login do
+    it_behaves_like :require_login do
       let (:action) { get :new }
     end
   end
@@ -62,7 +62,7 @@ describe InvitationsController do
         expect(response).to render_template :new
       end
     end
-    it_behaves_like :require_user_login do
+    it_behaves_like :require_login do
       let(:action) { post :create }
     end
   end

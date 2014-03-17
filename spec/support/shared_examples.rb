@@ -1,4 +1,4 @@
-shared_examples :require_user_login do
+shared_examples :require_login do
   context 'without user logged in' do
     before { clear_current_user }
     it 'redirects to sign in page' do
@@ -6,6 +6,22 @@ shared_examples :require_user_login do
       expect(response).to redirect_to :sign_in
     end
   end
+end
+
+shared_examples :require_admin do
+  context 'user is not admin' do
+    before do
+      set_current_user
+      action
+    end
+    it 'redirect_to the root page' do
+      expect(response).to redirect_to :root
+    end
+    it 'sets flash error message' do
+      expect(flash[:error]).to be_present
+    end
+  end
+
 end
 
 shared_examples :tokenable do

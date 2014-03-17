@@ -1,5 +1,5 @@
-class FollowershipsController < ApplicationController
-  before_action :require_user
+class FollowershipsController < AuthenticatedController
+
   def index
     @leaderships = current_user.leaderships
   end
