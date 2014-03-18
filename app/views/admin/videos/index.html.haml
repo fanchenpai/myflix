@@ -1,0 +1,29 @@
+%section.admin_add_video.container
+  .row
+    .col-sm-14.col-sm-offset-1
+      %article
+        %header
+          %h2 All Videos
+          = link_to "Add Video", new_admin_video_path, class: 'btn btn-primary pull-right'
+        %table.table
+          %thead
+            %tr
+              %th ID
+              %th(width="15%") Video Title
+              %th(width="15%") Category
+              %th(width="20%") Large Cover
+              %th(width="15%") Small Cover
+              %th(width="25%") Description
+              %th
+          %tbody
+            - @videos.each do |video|
+              %tr
+                %td= video.id
+                %td= video.title
+                %td= video.category_name
+                %td
+                  %img{src: image_src(video.large_cover), width: 150}
+                %td
+                  %img{src: image_src(video.small_cover), width: 100}
+                %td.text-left= video.description
+                %td Edit

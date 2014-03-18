@@ -23,6 +23,6 @@ doc/
 .DS_Store
 .idea
 
-local_env.yml
 Procfile.development
 .foreman
+.env

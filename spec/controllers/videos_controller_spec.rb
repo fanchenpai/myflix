@@ -8,7 +8,7 @@ describe VideosController do
     before { set_current_user }
     it "sets the videos variable" do
       get :index
-      expect(assigns(:videos)).to eq [video1, video2]
+      expect(assigns(:videos)).to match_array [video1, video2]
     end
     it "sets the categories variable" do
       get :index

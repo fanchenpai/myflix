@@ -2,5 +2,5 @@
   - videos.each do |video|
     .video.col-sm-2.text-center
       = link_to video do
-        %img{src: image_src(video.small_cover_url), width: 200, height: 300 }
+        %img{src: image_src(video.small_cover), width: 200, height: 300 }
       %div= video.title

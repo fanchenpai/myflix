@@ -47,6 +47,7 @@ describe InvitationsController do
     context "without valid input" do
       before do
         set_current_user
+        ActionMailer::Base.deliveries.clear
         post :create, invitation: {full_name: 'test'}
       end
       it "does not create invitation" do

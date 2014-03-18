@@ -36,7 +36,7 @@ Myflix::Application.routes.draw do
   resources :followerships, only: [:index, :create, :destroy]
 
   namespace :admin do
-    resources :videos, only: [:new, :create]
+    resources :videos, only: [:new, :create, :index]
   end
 
   if Rails.env.development?
