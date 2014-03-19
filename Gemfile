@@ -12,6 +12,9 @@ gem 'bcrypt-ruby', '~>3.1.2'
 gem 'bootstrap_form'
 gem 'sidekiq'
 gem 'unicorn'
+gem 'carrierwave'
+gem 'mini_magick'
+gem 'fog'
 
 group :development do
   gem 'sqlite3'

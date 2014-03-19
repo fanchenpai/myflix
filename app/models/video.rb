@@ -7,6 +7,8 @@ class Video < ActiveRecord::Base
 
   delegate :name, to: :category, prefix: :category
 
+  mount_uploader :small_cover, SmallCoverUploader
+  mount_uploader :large_cover, LargeCoverUploader
 
   def average_rating
     reviews.average(:rating).round(1).to_s unless reviews.empty?
