@@ -13,15 +13,15 @@ action = Category.create(name: 'Action')
 romance = Category.create(name: 'Romance')
 
 Category.all.each do |c|
-  7.times { Fabricate(:video, category: c) }
+  3.times { Fabricate(:video, category: c) }
 end
 
-user1 = User.create(full_name: 'Alice Wonderland', email:'alice@test.com',password:'password', password_confirmation:'password')
+user1 = User.create(full_name: 'Alice Wonderland', email:'alice@test.com',password:'password', password_confirmation:'password', admin: true)
 user2 = User.create(full_name: 'Bob Doe', email: 'bob@test.com', password:'password',password_confirmation:'password')
 user3 = Fabricate(:user)
 user4 = Fabricate(:user)
 
-Video.first(7).each do |v|
+Video.first(3).each do |v|
   Fabricate(:review, user: user2, video: v)
   Fabricate(:review, user: user3, video: v)
 end

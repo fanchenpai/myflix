@@ -26,4 +26,4 @@
                 %td
                   %img{src: image_src(video.small_cover_url), width: 100}
                 %td.text-left= video.description
-                %td Edit
+                %td= link_to "Play", video.video_url, class: 'btn btn-default', target: '_blank'

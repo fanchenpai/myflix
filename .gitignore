@@ -23,5 +23,7 @@ doc/
 .DS_Store
 .idea
 
+.foreman
 .env
+/config/local_env.yml
 /public/uploads/*
