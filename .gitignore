@@ -23,7 +23,5 @@ doc/
 .DS_Store
 .idea
 
-Procfile.development
-.foreman
 .env
 /public/uploads/*
