@@ -4,7 +4,7 @@ feature "Signing in" do
   given(:user1) { Fabricate(:user) }
 
   scenario "Signing in with correct credentials" do
-    user_sign_in(user1)
+    sign_in(user1)
     expect(page).to have_content user1.full_name
   end
 

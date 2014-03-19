@@ -14,11 +14,11 @@ feature 'inviting a friend' do
   private
 
   def inviter_fill_in_invitation
-    user_sign_in(user1)
+    sign_in(user1)
     click_on "Invite a friend"
     fill_out_invitation
     expect_valid_invitation_be_sent
-    click_on "Sign Out"
+    sign_out
   end
 
   def invitee_register_via_invitation
@@ -73,8 +73,8 @@ feature 'inviting a friend' do
   def expect_them_following_each_other
     click_on "People"
     expect(page).to have_link(user1.full_name)
-    click_on "Sign Out"
-    user_sign_in(user1)
+    sign_out
+    sign_in(user1)
     click_on "People"
     expect(page).to have_link("Alice Wonderland")
   end

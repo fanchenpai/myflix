@@ -7,7 +7,7 @@ feature 'my queue' do
   given!(:video3) { Fabricate(:video) }
 
   scenario 'user interact with queue items' do
-    user_sign_in(user1)
+    sign_in(user1)
 
     expect_add_to_queue_link(video1)
 

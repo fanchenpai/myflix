@@ -7,7 +7,7 @@ feature 'user can follow other people' do
 
   scenario 'follow and unfollow' do
 
-    user_sign_in(current_user)
+    sign_in(current_user)
     locate_and_click_user_page_link
     expect_follow_link
     click_link('Follow')
