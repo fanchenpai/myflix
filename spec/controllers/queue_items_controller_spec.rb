@@ -10,7 +10,7 @@ describe QueueItemsController do
       get :index
       expect(assigns(:queue_items)).to match_array [item1, item2]
     end
-    it_behaves_like :require_user_login do
+    it_behaves_like :require_login do
       let(:action) { get :index }
     end
   end
@@ -51,7 +51,7 @@ describe QueueItemsController do
       post :create, video_id: video1.id
       expect(flash[:notice]).not_to be_blank
     end
-    it_behaves_like :require_user_login do
+    it_behaves_like :require_login do
       let(:action) { post :create }
     end
   end
@@ -139,7 +139,7 @@ describe QueueItemsController do
         expect(response).to redirect_to :my_queue
       end
     end
-    it_behaves_like :require_user_login do
+    it_behaves_like :require_login do
       let(:action) { post :update_queue }
     end
   end
@@ -168,7 +168,7 @@ describe QueueItemsController do
       delete :destroy, id: queue_item2.id
       expect(QueueItem.count).to eq 1
     end
-    it_behaves_like :require_user_login do
+    it_behaves_like :require_login do
       let(:action) { delete :destroy, id: 1 }
     end
   end

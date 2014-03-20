@@ -23,6 +23,10 @@ doc/
 .DS_Store
 .idea
 
-local_env.yml
-Procfile.development
 .foreman
+.env
+/config/local_env.yml
+/public/uploads/*
+
+# Ignore application configuration
+/config/application.yml

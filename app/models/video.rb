@@ -1,10 +1,14 @@
 class Video < ActiveRecord::Base
+  default_scope -> { order('created_at DESC') }
   belongs_to :category
   has_many :reviews, -> { order('created_at DESC') }
   validates :title, presence: true
   validates :category_id, presence: true
 
   delegate :name, to: :category, prefix: :category
+
+  mount_uploader :small_cover, SmallCoverUploader
+  mount_uploader :large_cover, LargeCoverUploader
 
   def average_rating
     reviews.average(:rating).round(1).to_s unless reviews.empty?

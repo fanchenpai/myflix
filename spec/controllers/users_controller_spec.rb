@@ -127,7 +127,7 @@ describe UsersController do
       get :show, id: user1.id
       expect(assigns(:user)).to eq user1
     end
-    it_behaves_like :require_user_login do
+    it_behaves_like :require_login do
       let(:action) { get :show, id: user1.id }
     end
   end

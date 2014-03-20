@@ -3,7 +3,7 @@ require 'spec_helper'
 describe FollowershipsController do
   describe 'GET index' do
     before { set_current_user }
-    it_behaves_like :require_user_login do
+    it_behaves_like :require_login do
       let(:action) { get :index }
     end
     it 'sets leaderships variable' do
@@ -18,7 +18,7 @@ describe FollowershipsController do
       set_current_user
       post :create, following: user2.id
     end
-    it_behaves_like :require_user_login do
+    it_behaves_like :require_login do
       let(:action) { post :create, following: 2}
     end
     it 'associates the people being followed to current user' do
@@ -46,7 +46,7 @@ describe FollowershipsController do
   describe 'DELETE destroy' do
     let!(:user2) { Fabricate(:user) }
     before { set_current_user }
-    it_behaves_like :require_user_login do
+    it_behaves_like :require_login do
       let(:action) { delete :destroy, id: 1 }
     end
     it 'delete the associated following relationship from current user' do

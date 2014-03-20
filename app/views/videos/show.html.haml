@@ -2,7 +2,7 @@
   .container
     .row
       .video_large_cover.col-sm-7.col-sm-offset-1
-        %img{src: image_src(@video.large_cover_url), width: 665}
+        %img{src: image_src(@video.large_cover), width: 665}
       .video_info.col-sm-3
         %header
           %h3= @video.title
@@ -10,6 +10,7 @@
             %span Rating: #{@video.average_rating}/5.0
         %p= @video.description
         .actions
+          = link_to "Play", @video.video_url, class: 'btn btn-primary', target: '_blank'
           - unless current_user.queued_video?(@video)
             = link_to '+ My Queue', queue_items_path(video_id: @video.id), method: :post, class: 'btn btn-default'
 

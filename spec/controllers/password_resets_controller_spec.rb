@@ -60,6 +60,7 @@ describe PasswordResetsController do
     end
     context 'with non-existing email input' do
       before do
+        ActionMailer::Base.deliveries.clear
         real_user = Fabricate(:user)
         post :create, email: 'fake@test.com'
       end

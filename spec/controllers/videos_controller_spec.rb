@@ -8,13 +8,13 @@ describe VideosController do
     before { set_current_user }
     it "sets the videos variable" do
       get :index
-      expect(assigns(:videos)).to eq [video1, video2]
+      expect(assigns(:videos)).to match_array [video1, video2]
     end
     it "sets the categories variable" do
       get :index
-      expect(assigns(:categories)).to eq [video1.category, video2.category]
+      expect(assigns(:categories)).to match_array [video1.category, video2.category]
     end
-    it_behaves_like :require_user_login do
+    it_behaves_like :require_login do
       let(:action)  { get :index }
     end
   end
@@ -37,7 +37,7 @@ describe VideosController do
       expect(assigns(:review)).to be_new_record
       expect(assigns(:review)).to be_instance_of(Review)
     end
-    it_behaves_like :require_user_login do
+    it_behaves_like :require_login do
       let(:action)  { get :show , id: video1.id }
     end
   end
@@ -49,7 +49,7 @@ describe VideosController do
       post :search, search_term: video1.title[0..3]
       expect(assigns(:videos)).to eq [video1]
     end
-    it_behaves_like :require_user_login do
+    it_behaves_like :require_login do
       let(:action)  { post :search, search_term: video1.title[0..3] }
     end
   end
@@ -65,7 +65,7 @@ describe VideosController do
       get :index_by_category, id: video1.category.id
       expect(response).to render_template :genre
     end
-    it_behaves_like :require_user_login do
+    it_behaves_like :require_login do
       let(:action)  { get :index_by_category, id: video1.category.id }
     end
   end

@@ -1,4 +1,5 @@
 class Category < ActiveRecord::Base
+  default_scope -> { order('name') }
   has_many :videos, -> { order('title') }
   validates :name, presence: true, uniqueness: { case_sensitive: false }
 

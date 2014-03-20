@@ -6,6 +6,7 @@
       %li= link_to "Videos", videos_path
       %li= link_to "My Queue", my_queue_path
       %li= link_to "People", followerships_path
+      %li= link_to "Admin", new_admin_video_path if admin?
     = render 'shared/search_video_form'
     #user_links.pull-right
       %ul

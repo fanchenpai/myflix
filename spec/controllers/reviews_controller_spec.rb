@@ -45,7 +45,7 @@ describe ReviewsController do
       end
     end
 
-    it_behaves_like :require_user_login do
+    it_behaves_like :require_login do
       let(:action) { post :create, review: Fabricate.attributes_for(:review), video_id: video1.id }
     end
   end
