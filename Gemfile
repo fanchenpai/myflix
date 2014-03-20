@@ -31,6 +31,7 @@ group :development, :test do
   gem 'pry-nav'
   gem 'faker'
   gem 'fabrication'
+  gem 'figaro'
 end
 
 group :test do
