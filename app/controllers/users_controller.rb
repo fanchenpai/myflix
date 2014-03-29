@@ -56,18 +56,16 @@ class UsersController < AuthenticatedController
   end
 
   def process_payment
-    Stripe.api_key = ENV['STRIPE_SECRET_KEY']
     token = params[:stripeToken]
-    begin
-      charge = Stripe::Charge.create(
-        :amount => 999, # amount in cents
-        :currency => "usd",
-        :card => token,
-        :description => "Sign up charge for #{@user.email}"
-      )
+    charge = StripeWrapper::Charge.create(
+      amount: 999,
+      card: token,
+      description: "Sign up charge for #{@user.email}"
+    )
+    if charge.successful?
       true
-    rescue Stripe::CardError => e
-      @card_error = e.message
+    else
+      @card_error = charge.error_message
       false
     end
   end
