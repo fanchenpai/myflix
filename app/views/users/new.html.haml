@@ -21,13 +21,13 @@
             - if @card_error
               .alert.alert-danger= @card_error
           .form-group
-            %label.control-label.col-sm-3 Credit Card Number
+            %label.control-label.col-sm-3(for='credit-card-number') Credit Card Number
             .col-sm-6
-              %input.form-control{"data-stripe" => "number", type: "text", maxlength: 20}
+              %input.form-control#credit-card-number{"data-stripe" => "number", type: "text", maxlength: 20}
           .form-group
-            %label.control-label.col-sm-3 Security Code
+            %label.control-label.col-sm-3(for='security-code') Security Code
             .col-sm-2
-              %input.form-control{"data-stripe" => "cvc", type: "text"}
+              %input.form-control#security-code{"data-stripe" => "cvc", type: "text"}
           .form-group
             %label.control-label.col-sm-3 Expiration
             .col-sm-2

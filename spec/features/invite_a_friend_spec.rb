@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'inviting a friend' do
+feature 'inviting a friend', { js: true, vcr: true } do
   let(:user1) { Fabricate(:user) }
   before { clear_emails }
   after { clear_emails }
@@ -15,7 +15,7 @@ feature 'inviting a friend' do
 
   def inviter_fill_in_invitation
     sign_in(user1)
-    click_on "Invite a friend"
+    visit invite_path
     fill_out_invitation
     expect_valid_invitation_be_sent
     sign_out
@@ -55,6 +55,10 @@ feature 'inviting a friend' do
   def submit_register_form
     fill_in('user[password]', with: 'password')
     fill_in('user[password_confirmation]', with: 'password')
+    fill_in('Credit Card Number', with: '4242424242424242')
+    fill_in('Security Code', with: '123')
+    select('5 - May', from: 'date_month')
+    select((Date.today.year+1).to_s, from: 'date_year')
     click_on('Sign Up')
   end
 

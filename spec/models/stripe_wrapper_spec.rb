@@ -12,21 +12,8 @@ describe StripeWrapper, :vcr do # :vcr => { record: :all } to re-record
     )
   end
 
-  describe ".set_api_key" do
-    let(:card_number) { "4242424242424242" }
-    before { Stripe.api_key = nil }
-    it "should make any Stripe method call failed if not invoked first" do
-      expect { token }.to raise_error(Stripe::AuthenticationError)
-    end
-    it "should allow following Stripe method call successful if invoked" do
-      StripeWrapper.set_api_key
-      expect(token.id).to be_present
-    end
-  end
-
   describe StripeWrapper::Charge do
     describe ".create" do
-      before { StripeWrapper.set_api_key }
       context "with valid card number" do
         let(:card_number) { "4242424242424242" }
         it "should be successful" do

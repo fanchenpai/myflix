@@ -1,9 +1,5 @@
 module StripeWrapper
 
-  def self.set_api_key
-    Stripe.api_key = ENV['STRIPE_SECRET_KEY']
-  end
-
   class Charge
     attr_reader :response
 
@@ -13,7 +9,6 @@ module StripeWrapper
     end
 
     def self.create(options={})
-      StripeWrapper.set_api_key
       begin
         charge = Stripe::Charge.create(
           amount: options[:amount],
@@ -25,8 +20,6 @@ module StripeWrapper
       rescue Stripe::CardError => e
         new(e, :error)
       rescue => e
-        #flash[:error] = "Sorry, we are not able to process your payment at this time. Please try again later."
-        #AdminMailer.delay.error_notification('Stripe error',e.message)
         new(e, :error)
       end
     end
