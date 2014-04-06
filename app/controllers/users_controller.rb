@@ -28,6 +28,7 @@ class UsersController < AuthenticatedController
       UserMailer.delay.welcome_email(@user.id)
       redirect_to videos_path
     else
+      flash[:error] = 'Please correct the highlighted field(s).'
       render :new
     end
   end
