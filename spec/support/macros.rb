@@ -27,5 +27,15 @@ def sign_in(user=nil)
 end
 
 def sign_out
-  click_on "Sign Out"
+  visit sign_out_path
+end
+
+def mock_valid_charge
+  charge = double(:charge, successful?: true)
+  StripeWrapper::Charge.should_receive(:create).and_return(charge)
+end
+
+def mock_failed_charge
+  charge = double(:charge, successful?: false, error_message: 'declined')
+  StripeWrapper::Charge.should_receive(:create).and_return(charge)
 end

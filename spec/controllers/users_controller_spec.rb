@@ -35,8 +35,11 @@ describe UsersController do
   end
 
   describe 'POST create' do
-    context 'when inputs are valid and saved to db' do
-      before { post :create, { user: Fabricate.attributes_for(:user) } }
+    context 'when all inputs are valid' do
+      before do
+        mock_valid_charge
+        post :create, { user: Fabricate.attributes_for(:user), stripeToken: 'abc' }
+      end
       it 'sets the user variable' do
         expect(assigns(:user)).to be_instance_of(User)
         expect(assigns(:user)).to be_valid
@@ -56,13 +59,14 @@ describe UsersController do
       end
     end
 
-    context 'when register through invitation' do
+    context 'when register through invitation and all inputs are valid' do
       let(:user1) { Fabricate(:user) }
       before do
         invitation = Fabricate(:invitation, user_id: user1.id)
+        mock_valid_charge
         post :create, {
           user: Fabricate.attributes_for(:user),
-          invitation: invitation.token }
+          invitation: invitation.token, stripeToken: 'abc' }
       end
       it 'sets the invitation variable' do
         expect(assigns(:invitation)).to eq Invitation.last
@@ -76,7 +80,7 @@ describe UsersController do
       end
     end
 
-    context 'when inputs are not valid' do
+    context 'when user info inputs are not valid' do
       before do
         ActionMailer::Base.deliveries.clear
         post :create, { user: { full_name: 'test', email: 'test'} }
@@ -96,15 +100,37 @@ describe UsersController do
       end
     end
 
+    context 'when credit card info is not valid' do
+      before do
+        ActionMailer::Base.deliveries.clear
+        mock_failed_charge
+        post :create, { user: Fabricate.attributes_for(:user), stripeToken: 'abc' }
+      end
+      it 'should not save to db' do
+        expect(User.all.size).to eq 0
+      end
+      it 'renders the new template' do
+        expect(response).to render_template :new
+      end
+      it 'does not send out welcome mail' do
+        expect(ActionMailer::Base.deliveries).to be_empty
+        ActionMailer::Base.deliveries.clear
+      end
+      it 'sets the card_error variable' do
+        expect(assigns(:card_error)).to be_present
+      end
+    end
+
     context "when sending welcome email" do
       before do
+        mock_valid_charge
         post :create, {
           user: {
             full_name: 'Alice Wonderland',
             email: 'alice@test.com',
             password: 'password',
             password_confirmation: 'password'
-          }
+          }, stripeToken: 'abc'
         }
       end
       after { ActionMailer::Base.deliveries.clear }

@@ -19,13 +19,16 @@ class UsersController < AuthenticatedController
   def create
     @user = User.new(user_params)
     @invitation = Invitation.find_by_token(params[:invitation]) if params[:invitation]
-    if @user.save
+    if @user.valid?
+      render :new and return unless process_payment
+      @user.save
       redeem_invitation
       flash[:success] = "Your account has been created."
       session[:user_id] = @user.id
       UserMailer.delay.welcome_email(@user.id)
       redirect_to videos_path
     else
+      flash[:error] = 'Please correct the highlighted field(s).'
       render :new
     end
   end
@@ -51,6 +54,21 @@ class UsersController < AuthenticatedController
   def establish_friendship(user1, user2)
     user1.follow(user2)
     user2.follow(user1)
+  end
+
+  def process_payment
+    token = params[:stripeToken]
+    charge = StripeWrapper::Charge.create(
+      amount: 999,
+      card: token,
+      description: "Sign up charge for #{@user.email}"
+    )
+    if charge.successful?
+      true
+    else
+      @card_error = charge.error_message
+      false
+    end
   end
 
 end

@@ -15,6 +15,7 @@ gem 'unicorn'
 gem 'carrierwave'
 gem 'mini_magick'
 gem 'fog'
+gem 'stripe'
 
 group :development do
   gem 'sqlite3'
@@ -39,6 +40,11 @@ group :test do
   gem 'capybara'
   gem 'launchy'
   gem 'capybara-email'
+  gem 'capybara-webkit'
+  gem 'webmock'
+  gem 'vcr'
+  gem 'selenium-webdriver'
+  gem 'database_cleaner'
 end
 
 group :production do

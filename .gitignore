@@ -27,6 +27,7 @@ doc/
 .env
 /config/local_env.yml
 /public/uploads/*
+/spec/cassettes
 
 # Ignore application configuration
 /config/application.yml
