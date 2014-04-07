@@ -10,9 +10,7 @@ Myflix::Application.configure do
   config.assets.compress = true
   config.assets.js_compressor = :uglifier
 
-  config.assets.compile = false
-
-  config.assets.precompile += %w( *.css *.js )
+  config.assets.compile = true
 
   config.assets.digest = true
 
