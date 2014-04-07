@@ -12,6 +12,8 @@ Myflix::Application.configure do
 
   config.assets.compile = false
 
+  config.assets.precompile += %w( *.css *.js )
+
   config.assets.digest = true
 
   config.i18n.fallbacks = true
