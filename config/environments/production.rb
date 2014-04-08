@@ -12,8 +12,6 @@ Myflix::Application.configure do
 
   config.assets.compile = false
 
-  config.assets.precompile += %w( payment.js )
-
   config.assets.digest = true
 
   config.i18n.fallbacks = true
