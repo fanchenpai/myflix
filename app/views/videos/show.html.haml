@@ -6,8 +6,7 @@
       .video_info.col-sm-3
         %header
           %h3= @video.title
-          - unless @video.reviews.empty?
-            %span Rating: #{@video.average_rating}/5.0
+          Rating: #{@video.rating}
         %p= @video.description
         .actions
           = link_to "Play", @video.video_url, class: 'btn btn-primary', target: '_blank'
