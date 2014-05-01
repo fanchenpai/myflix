@@ -26,7 +26,7 @@ feature 'register with credit card', {js: true, vcr: true} do
     fill_in_valid_user_info
     fill_in_credit_card_info(expired_card_number)
     click_on('Sign Up')
-    expect(page).to have_content 'expiration date is incorrect'
+    expect(page).to have_content 'expired'
     fill_in_valid_user_info
     fill_in_credit_card_info(incorrect_card_number)
     click_on('Sign Up')
