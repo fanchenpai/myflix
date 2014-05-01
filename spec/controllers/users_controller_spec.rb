@@ -35,113 +35,54 @@ describe UsersController do
   end
 
   describe 'POST create' do
-    context 'when all inputs are valid' do
+    context 'when sign up successfully' do
       before do
-        mock_valid_charge
+        result = double('user_sign_up', successful?: true, user_id: 99)
+        UserSignUp.any_instance.should_receive(:sign_up).with('abc', nil).and_return(result)
         post :create, { user: Fabricate.attributes_for(:user), stripeToken: 'abc' }
       end
-      it 'sets the user variable' do
+      it 'should set the user variable' do
         expect(assigns(:user)).to be_instance_of(User)
-        expect(assigns(:user)).to be_valid
       end
-      it 'saves to the db' do
-        expect(assigns(:user)).to eq User.last
+      it 'should log user in automaticaly(session)' do
+        expect(session[:user_id]).to eq 99
       end
-      it 'sets the session user_id' do
-        expect(session[:user_id]).not_to be_nil
-        expect(session[:user_id]).to eq User.last.id
+      it 'should set the flash message' do
+        expect(flash[:success]).to be_present
       end
-      it 'sets flash notice' do
-        expect(flash[:success]).not_to be nil
-      end
-      it 'redirects to videos path' do
-        expect(response).to redirect_to videos_path
+      it 'shoulc redirect to videos page' do
+        expect(response).to redirect_to :videos
       end
     end
 
-    context 'when register through invitation and all inputs are valid' do
+    context 'when sign up failed without invitation' do
+      before do
+        result = double('user_sign_up', successful?: false, invitation: nil, error_message: 'error')
+        UserSignUp.any_instance.should_receive(:sign_up).with('abc', nil).and_return(result)
+        post :create, { user: {full_name: 'test', email: 'test'}, stripeToken: 'abc' }
+      end
+      it 'should set the user variable' do
+        expect(assigns(:user)).to be_present
+      end
+      it 'should set the flash error message' do
+        expect(flash[:error]).to be_present
+      end
+      it 'should render new template' do
+        expect(response).to render_template :new
+      end
+    end
+
+    context 'when sign up failed with invitation' do
       let(:user1) { Fabricate(:user) }
+      let(:invitation) { Fabricate(:invitation, user: user1) }
       before do
-        invitation = Fabricate(:invitation, user_id: user1.id)
-        mock_valid_charge
-        post :create, {
-          user: Fabricate.attributes_for(:user),
-          invitation: invitation.token, stripeToken: 'abc' }
+        result = double('user_sign_up', successful?: false, invitation: invitation, error_message: 'error')
+        UserSignUp.any_instance.should_receive(:sign_up).with('abc', invitation.token).and_return(result)
+        post :create, { user: {full_name: 'test', email: 'test'}, stripeToken: 'abc', invitation: invitation.token }
       end
-      it 'sets the invitation variable' do
-        expect(assigns(:invitation)).to eq Invitation.last
-      end
-
-      it 'sets the new user to follow inviter' do
-        expect(user1.followers).to include User.last
-      end
-      it 'set the inviter to follow the new user' do
-        expect(User.last.followers).to include user1
-      end
-    end
-
-    context 'when user info inputs are not valid' do
-      before do
-        ActionMailer::Base.deliveries.clear
-        post :create, { user: { full_name: 'test', email: 'test'} }
-      end
-      it 'set the user variable that marked invalid' do
-        expect(assigns(:user)).not_to be_valid
-      end
-      it 'should not save to db' do
-        expect(User.all.size).to eq 0
-      end
-      it 'renders the new template' do
-        expect(response).to render_template :new
-      end
-      it 'does not send out welcome mail' do
-        expect(ActionMailer::Base.deliveries).to be_empty
-        ActionMailer::Base.deliveries.clear
-      end
-    end
-
-    context 'when credit card info is not valid' do
-      before do
-        ActionMailer::Base.deliveries.clear
-        mock_failed_charge
-        post :create, { user: Fabricate.attributes_for(:user), stripeToken: 'abc' }
-      end
-      it 'should not save to db' do
-        expect(User.all.size).to eq 0
-      end
-      it 'renders the new template' do
-        expect(response).to render_template :new
-      end
-      it 'does not send out welcome mail' do
-        expect(ActionMailer::Base.deliveries).to be_empty
-        ActionMailer::Base.deliveries.clear
-      end
-      it 'sets the card_error variable' do
-        expect(assigns(:card_error)).to be_present
-      end
-    end
-
-    context "when sending welcome email" do
-      before do
-        mock_valid_charge
-        post :create, {
-          user: {
-            full_name: 'Alice Wonderland',
-            email: 'alice@test.com',
-            password: 'password',
-            password_confirmation: 'password'
-          }, stripeToken: 'abc'
-        }
-      end
-      after { ActionMailer::Base.deliveries.clear }
-      it 'sends out the email' do
-        expect(ActionMailer::Base.deliveries).not_to be_empty
-      end
-      it 'sends to the right recepient' do
-        expect(ActionMailer::Base.deliveries.last.to[0]).to eq 'alice@test.com'
-      end
-      it 'has the correct message content' do
-        expect(ActionMailer::Base.deliveries.last.body).to include 'Alice Wonderland'
+      it 'should set the initation variable' do
+        expect(assigns(:invitation)).to be_present
+        expect(assigns(:invitation)).to eq invitation
       end
     end
   end

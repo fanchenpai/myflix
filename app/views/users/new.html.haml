@@ -17,8 +17,6 @@
         = f.password_field :password_confirmation, label: "Confirm Password"
         %fieldset.credit_card
           .payment-errors
-            - if @card_error
-              .alert.alert-danger= @card_error
           .form-group
             %label.control-label.col-sm-3(for='credit-card-number') Credit Card Number
             .col-sm-6
